@@ -1,3 +1,3 @@
 # Codiora_Internship
-Frontend development
+Frontend development - 
 This repository contains my all files for Internship with codiora software house
