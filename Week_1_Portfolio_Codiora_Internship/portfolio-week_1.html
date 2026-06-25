@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zaid Mujtaba Khan — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =====================
+       RESET & BASE
+    ===================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #0d0d0d;
+      color: #f0f0f0;
+      scroll-behavior: smooth;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+
+    /* =====================
+       NAVBAR
+    ===================== */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #0d0d0d;
+      border-bottom: 1px solid #2a2a2a;
+      z-index: 1000;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: #e2b96f;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 32px;
+    }
+
+    nav ul li a {
+      font-size: 14px;
+      color: #aaa;
+      /* smooth color change on hover */
+      transition: color 0.2s;
+    }
+
+    nav ul li a:hover {
+      color: #e2b96f;
+    }
+
+
+    /* =====================
+       MOBILE MENU
+       (CSS only — uses a hidden checkbox trick)
+    ===================== */
+
+    /* hide the checkbox — it's just used as an on/off switch */
+    #menu-toggle {
+      display: none;
+    }
+
+    /* the hamburger label — three lines */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background-color: #e2b96f;
+      /* smooth animation when turning into X */
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    /* the full-screen mobile menu — hidden by default */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: #0d0d0d;
+      z-index: 999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+      /* fade in animation */
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* when the checkbox IS checked, show the mobile menu */
+    #menu-toggle:checked~.mobile-nav {
+      display: flex;
+    }
+
+    /* turn top line into \ */
+    #menu-toggle:checked~.hamburger span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    /* hide middle line */
+    #menu-toggle:checked~.hamburger span:nth-child(2) {
+      opacity: 0;
+    }
+
+    /* turn bottom line into / */
+    #menu-toggle:checked~.hamburger span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .mobile-nav a {
+      font-size: 28px;
+      font-weight: 600;
+      color: #f0f0f0;
+      transition: color 0.2s;
+    }
+
+    .mobile-nav a:hover {
+      color: #e2b96f;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+
+    /* =====================
+       SHARED SECTION STYLES
+    ===================== */
+    section {
+      padding: 100px 40px;
+    }
+
+    .section-title {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #f0f0f0;
+    }
+
+    /* the little gold line under each title */
+    .gold-line {
+      width: 50px;
+      height: 3px;
+      background-color: #e2b96f;
+      margin-bottom: 40px;
+    }
+
+
+    /* =====================
+       SCROLL REVEAL ANIMATION
+       Elements fade up as you scroll to them.
+       This uses the "animation-timeline: view()" trick —
+       pure CSS, zero JavaScript.
+    ===================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: slideUp 0.7s ease forwards;
+      animation-timeline: view();
+      /* start animating when the element enters the screen */
+      animation-range: entry 0% entry 30%;
+    }
+
+    @keyframes slideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+
+    /* =====================
+       HOME SECTION
+    ===================== */
+    #home {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 80px;
+    }
+
+    #home h1 {
+      font-size: 60px;
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      /* name types itself in on page load */
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 3px solid #e2b96f;
+      width: 0;
+      animation: typing 1.8s steps(22) 0.3s forwards,
+        blink 0.7s step-end infinite;
+    }
+
+    @keyframes typing {
+      to {
+        width: 100%;
+      }
+    }
+
+    @keyframes blink {
+      50% {
+        border-color: transparent;
+      }
+    }
+
+    #home h1 span {
+      color: #e2b96f;
+    }
+
+    #home p {
+      font-size: 18px;
+      color: #aaa;
+      max-width: 500px;
+      margin-bottom: 32px;
+      /* fade in after the typing is done */
+      opacity: 0;
+      animation: fadeInUp 0.6s ease 2.2s forwards;
+    }
+
+    #home a.btn {
+      display: inline-block;
+      padding: 14px 32px;
+      background-color: #e2b96f;
+      color: #0d0d0d;
+      font-weight: 600;
+      font-size: 14px;
+      border-radius: 4px;
+      width: fit-content;
+      opacity: 0;
+      animation: fadeInUp 0.6s ease 2.5s forwards;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    #home a.btn:hover {
+      opacity: 0.85 !important;
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+
+    /* =====================
+       CSS-ONLY SLIDER
+       How it works:
+       - Each slider has radio buttons (hidden)
+       - Slides sit side by side in a row
+       - Clicking a radio moves the row using the
+         "~" (sibling) CSS selector
+       - No JavaScript needed at all!
+    ===================== */
+
+    /* hide all radio inputs */
+    .slider-radio {
+      display: none;
+    }
+
+    .slider-box {
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: #161616;
+      max-width: 700px;
+    }
+
+    /* the wrapper clips the slides so only one shows */
+    .slides-window {
+      overflow: hidden;
+    }
+
+    /* all slides sit in a row */
+    .slides-row {
+      display: flex;
+      /* smooth slide movement */
+      transition: transform 0.5s ease;
+    }
+
+    .slide {
+      min-width: 100%;
+      padding: 40px;
+    }
+
+    .slide h3 {
+      font-size: 22px;
+      font-weight: 600;
+      color: #e2b96f;
+      margin-bottom: 12px;
+    }
+
+    .slide p {
+      font-size: 15px;
+      color: #aaa;
+      line-height: 1.8;
+    }
+
+    /* ---- ABOUT slider positions ---- */
+    #a1:checked~.slider-box .slides-row {
+      transform: translateX(0%);
+    }
+
+    #a2:checked~.slider-box .slides-row {
+      transform: translateX(-100%);
+    }
+
+    #a3:checked~.slider-box .slides-row {
+      transform: translateX(-200%);
+    }
+
+    /* ---- SKILLS slider positions ---- */
+    #s1:checked~.slider-box .slides-row {
+      transform: translateX(0%);
+    }
+
+    #s2:checked~.slider-box .slides-row {
+      transform: translateX(-100%);
+    }
+
+    #s3:checked~.slider-box .slides-row {
+      transform: translateX(-200%);
+    }
+
+    /* ---- PROJECTS slider positions ---- */
+    #p1:checked~.slider-box .slides-row {
+      transform: translateX(0%);
+    }
+
+    #p2:checked~.slider-box .slides-row {
+      transform: translateX(-100%);
+    }
+
+    #p3:checked~.slider-box .slides-row {
+      transform: translateX(-200%);
+    }
+
+    /* bottom bar with dots and arrows */
+    .slider-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      border-top: 1px solid #2a2a2a;
+    }
+
+    .dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* dots are labels that control the radio buttons */
+    .dot-label {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #444;
+      cursor: pointer;
+      display: block;
+      transition: background-color 0.2s;
+    }
+
+    .dot-label:hover {
+      background-color: #888;
+    }
+
+    /* gold dot = active slide (about) */
+    #a1:checked~.slider-box .dot-label[for="a1"],
+    #a2:checked~.slider-box .dot-label[for="a2"],
+    #a3:checked~.slider-box .dot-label[for="a3"] {
+      background-color: #e2b96f;
+    }
+
+    /* gold dot = active slide (skills) */
+    #s1:checked~.slider-box .dot-label[for="s1"],
+    #s2:checked~.slider-box .dot-label[for="s2"],
+    #s3:checked~.slider-box .dot-label[for="s3"] {
+      background-color: #e2b96f;
+    }
+
+    /* gold dot = active slide (projects) */
+    #p1:checked~.slider-box .dot-label[for="p1"],
+    #p2:checked~.slider-box .dot-label[for="p2"],
+    #p3:checked~.slider-box .dot-label[for="p3"] {
+      background-color: #e2b96f;
+    }
+
+    /* arrow buttons are also labels */
+    .arrows {
+      display: flex;
+      gap: 8px;
+    }
+
+    .arrow-label {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid #2a2a2a;
+      color: #f0f0f0;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s;
+    }
+
+    .arrow-label:hover {
+      background-color: #e2b96f;
+      color: #0d0d0d;
+      border-color: #e2b96f;
+    }
+
+
+    /* =====================
+       ABOUT SECTION
+    ===================== */
+    #about {
+      background-color: #111;
+    }
+
+
+    /* =====================
+       SKILLS SECTION
+    ===================== */
+    #skills {
+      background-color: #0d0d0d;
+    }
+
+
+    /* =====================
+       PROJECTS SECTION
+    ===================== */
+    #projects {
+      background-color: #111;
+    }
+
+    .download-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 10px 22px;
+      border: 1px solid #e2b96f;
+      color: #e2b96f;
+      font-size: 13px;
+      border-radius: 4px;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .download-link:hover {
+      background-color: #e2b96f;
+      color: #0d0d0d;
+    }
+
+
+    /* =====================
+       CONTACT SECTION
+    ===================== */
+    #contact {
+      background-color: #0d0d0d;
+    }
+
+    .contact-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 480px;
+    }
+
+    .contact-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 24px;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      background-color: #161616;
+      /* smooth hover slide */
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .contact-card:hover {
+      border-color: #e2b96f;
+      transform: translateX(6px);
+    }
+
+    .contact-icon {
+      width: 44px;
+      height: 44px;
+      background-color: #1f1f1f;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .contact-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: #e2b96f;
+    }
+
+    .contact-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    .contact-value {
+      font-size: 15px;
+      color: #f0f0f0;
+    }
+
+
+    /* =====================
+       FOOTER
+    ===================== */
+    footer {
+      padding: 24px 40px;
+      border-top: 1px solid #2a2a2a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #555;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    footer a {
+      color: #555;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: #e2b96f;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+
+    /* =====================
+       RESPONSIVE — MOBILE
+    ===================== */
+    @media (max-width: 768px) {
+
+      nav ul {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      nav {
+        padding: 16px 20px;
+      }
+
+      section {
+        padding: 80px 20px;
+      }
+
+      #home h1 {
+        font-size: 36px;
+      }
+
+      #home p {
+        font-size: 15px;
+      }
+
+      .slide {
+        padding: 28px 20px;
+      }
+
+      footer {
+        padding: 20px;
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .contact-cards {
+        max-width: 100%;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <!-- =====================
+       MOBILE MENU TRICK
+       The checkbox must come BEFORE the hamburger
+       and the mobile-nav in the HTML so the CSS
+       sibling selector (~) can reach them.
+  ===================== -->
+  <input type="checkbox" id="menu-toggle" />
+
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav>
+    <div class="logo">ZMK</div>
+    <ul>
+      <li><a href="#home">home</a></li>
+      <li><a href="#about">about me</a></li>
+      <li><a href="#skills">skills</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+    <!-- this label toggles the hidden checkbox above -->
+    <label for="menu-toggle" class="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
+  </nav>
+
+  <!-- mobile full-screen menu -->
+  <div class="mobile-nav">
+    <label for="menu-toggle"
+      style="position:absolute;top:20px;right:30px;font-size:30px;cursor:pointer;color:#e2b96f;">✕</label>
+    <a href="#home" onclick="">home</a>
+    <a href="#about" onclick="">about me</a>
+    <a href="#skills" onclick="">skills</a>
+    <a href="#projects" onclick="">projects</a>
+    <a href="#contact" onclick="">contact</a>
+  </div>
+
+
+  <!-- ===================== HOME ===================== -->
+  <section id="home">
+    <h1>Hi, I'm <span>Zaid Mujtaba Khan</span></h1>
+    <p>Software Engineering Student. Building real things while i learn</p>
+    <a href="#projects" class="btn">View My Work</a>
+  </section>
+
+
+  <!-- ===================== ABOUT ME ===================== -->
+  <section id="about">
+
+    <!--
+      SLIDER TRICK EXPLAINED:
+      1. We have 3 hidden radio inputs (a1, a2, a3)
+      2. Dots and arrows are <label> elements pointing to those radios
+      3. When a radio is checked, CSS moves the slides row left/right
+      All three radio inputs must be siblings of .slider-box
+    -->
+    <input type="radio" class="slider-radio" name="about" id="a1" checked />
+    <input type="radio" class="slider-radio" name="about" id="a2" />
+    <input type="radio" class="slider-radio" name="about" id="a3" />
+
+    <div class="reveal">
+      <div class="section-title">about me</div>
+      <div class="gold-line"></div>
+    </div>
+
+    <div class="reveal slider-box">
+      <div class="slides-window">
+        <div class="slides-row">
+
+          <div class="slide">
+            <h3>Who I Am</h3>
+            <p>Hello! I'm Zaid Mujtaba Khan, a passionate and driven individual who is always looking to grow. I am
+              currently pursuing my graduation while keeping myself active at the gym and sharpening my skills in
+              coding. I believe in giving my best in everything I do and constantly pushing myself to become a better
+              version of myself every single day</p>
+          </div>
+
+          <div class="slide">
+            <h3>What I'm Doing Now</h3>
+            <p>I am currently pursuing my graduation from Sindh Agriculture University, Tandojam, where I am working
+              hard to build a strong academic foundation. Alongside my studies, I am actively learning and developing my
+              skills in Software Engineering, including Cybersecurity, Networking, Linux, and Python. I believe in
+              making the most of my time by learning side by side with my studies, so that by the time I graduate, I
+              will already have a solid set of practical skills to offer.</p>
+          </div>
+
+          <div class="slide">
+            <h3>My Future Goals</h3>
+            <p>My goal is to complete my graduation and build a strong career in Software Engineering and Cybersecurity.
+              I want to keep improving my skills in Python, Linux and Networking and work on real projects that actually
+              make a difference. Most importantly, I just want to keep growing every day and become the best version of
+              myself.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="slider-bar">
+        <div class="dots">
+          <label class="dot-label" for="a1"></label>
+          <label class="dot-label" for="a2"></label>
+          <label class="dot-label" for="a3"></label>
+        </div>
+        <div class="arrows">
+          <!-- prev / next arrows just point to different radio ids -->
+          <label class="arrow-label" for="a3">&#8592;</label>
+          <label class="arrow-label" for="a2">&#8594;</label>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ===================== SKILLS ===================== -->
+  <section id="skills">
+
+    <input type="radio" class="slider-radio" name="skills" id="s1" checked />
+    <input type="radio" class="slider-radio" name="skills" id="s2" />
+    <input type="radio" class="slider-radio" name="skills" id="s3" />
+
+    <div class="reveal">
+      <div class="section-title">skills</div>
+      <div class="gold-line"></div>
+    </div>
+
+    <div class="reveal slider-box">
+      <div class="slides-window">
+        <div class="slides-row">
+
+          <div class="slide">
+            <h3>Frontend Skills</h3>
+            <p>Frontend Development & SEO
+              Building clean and responsive web interfaces while optimizing content to rank better on search engines and
+              drive organic traffic.</p>
+          </div>
+
+          <div class="slide">
+            <h3>Related Skills</h3>
+            <p>Python Programming
+              Developing my coding skills in Python, using it to write scripts, automate tasks and solve real-world
+              problems.</p>
+          </div>
+
+          <div class="slide">
+            <h3>Other Skills</h3>
+            <p>Cybersecurity & Networking
+              Passionate about protecting systems and networks, with hands-on knowledge of security concepts, Linux and
+              networking tools.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="slider-bar">
+        <div class="dots">
+          <label class="dot-label" for="s1"></label>
+          <label class="dot-label" for="s2"></label>
+          <label class="dot-label" for="s3"></label>
+        </div>
+        <div class="arrows">
+          <label class="arrow-label" for="s3">&#8592;</label>
+          <label class="arrow-label" for="s2">&#8594;</label>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ===================== PROJECTS ===================== -->
+  <section id="projects">
+
+    <input type="radio" class="slider-radio" name="projects" id="p1" checked />
+    <input type="radio" class="slider-radio" name="projects" id="p2" />
+    <input type="radio" class="slider-radio" name="projects" id="p3" />
+
+    <div class="reveal">
+      <div class="section-title">projects</div>
+      <div class="gold-line"></div>
+    </div>
+
+    <div class="reveal slider-box">
+      <div class="slides-window">
+        <div class="slides-row">
+
+          <div class="slide">
+            <h3>Project One</h3>
+            <p>A clothing Side, It's a backend project where we have a login form which register's the user, rember's the user so user can login later with his credentials, user can edit his/her credentials and also delete the account permanantly</p>
+            <a href="https://drive.google.com/file/d/1UAwI8-SvlSjTS3TrWNI8t2kyQNEyAZ3v/view?usp=sharing"
+              class="download-link">&#8595; Download ZIP</a>
+          </div>
+
+          <div class="slide">
+            <h3>Project Two</h3>
+            <p>In Progress</p>
+            <a href="#" class="download-link">&#8595; Download ZIP</a>
+          </div>
+
+          <div class="slide">
+            <h3>Project Three</h3>
+            <p>In Progress</p>
+            <a href="#" class="download-link">&#8595; Download ZIP</a>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="slider-bar">
+        <div class="dots">
+          <label class="dot-label" for="p1"></label>
+          <label class="dot-label" for="p2"></label>
+          <label class="dot-label" for="p3"></label>
+        </div>
+        <div class="arrows">
+          <label class="arrow-label" for="p3">&#8592;</label>
+          <label class="arrow-label" for="p2">&#8594;</label>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ===================== CONTACT ===================== -->
+  <section id="contact">
+
+    <div class="reveal">
+      <div class="section-title">contact</div>
+      <div class="gold-line"></div>
+    </div>
+
+    <div class="contact-cards reveal">
+
+      <a href="https://linkedin.com/in/zaid-mujtaba-807943250" target="_blank" class="contact-card">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7H10v-7a6 6 0 0 1 6-6z" />
+            <rect x="2" y="9" width="4" height="12" />
+            <circle cx="4" cy="4" r="2" />
+          </svg>
+        </div>
+        <div>
+          <div class="contact-label">LinkedIn</div>
+          <div class="contact-value">Zaid Mujtaba Khan</div>
+        </div>
+      </a>
+
+      <a href="zaidmujtaba548@gmail.com" class="contact-card">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+            <polyline points="22,6 12,13 2,6" fill="none" stroke="#e2b96f" stroke-width="1.5" />
+          </svg>
+        </div>
+        <div>
+          <div class="contact-label">Professional Email</div>
+          <div class="contact-value">zaidmujtaba548@gmail.com</div>
+        </div>
+      </a>
+
+      <a href="https://wa.me/+92 310 6225630" target="_blank" class="contact-card">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+          </svg>
+        </div>
+        <div>
+          <div class="contact-label">Business WhatsApp</div>
+          <div class="contact-value">+92 310 622 5630</div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <span>© 2026 Zaid Mujtaba Khan</span>
+    <div class="footer-links">
+      <a href="#home">home</a>
+      <a href="#about">about me</a>
+      <a href="#skills">skills</a>
+      <a href="#projects">projects</a>
+    </div>
+  </footer>
+
+</body>
+
+</html>
