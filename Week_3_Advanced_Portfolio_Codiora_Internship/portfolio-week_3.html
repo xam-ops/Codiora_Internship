@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zaid Mujtaba Khan — SEO Expert & Web Developer</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GSAP + ScrollTrigger + AOS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: '#0a0a0f',
+            surface: '#111118',
+            card: '#16161f',
+            border: '#252535',
+            accent: '#6c63ff',
+            accentLight: '#a09bff',
+            gold: '#f5c842',
+            muted: '#6b7280',
+            textMain: '#e8e8f0',
+            textSub: '#9090a8',
+          },
+          fontFamily: {
+            display: ['Syne', 'sans-serif'],
+            body: ['Space Grotesk', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: #0a0a0f; color: #e8e8f0; font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #0a0a0f; }
+    ::-webkit-scrollbar-thumb { background: #6c63ff; border-radius: 2px; }
+
+    /* Noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.4;
+    }
+
+    /* Gradient blobs */
+    .blob { position: absolute; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; }
+
+    /* Nav */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; transition: all 0.3s; }
+    nav.scrolled { background: rgba(10,10,15,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid #252535; }
+
+    /* Hero name */
+    .hero-name { font-family: 'Syne', sans-serif; font-weight: 800; line-height: 1; }
+    .gradient-text { background: linear-gradient(135deg, #6c63ff 0%, #a09bff 50%, #f5c842 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* Typewriter */
+    .typewriter-text::after { content: '|'; animation: blink 0.7s infinite; color: #6c63ff; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* Filter buttons */
+    .filter-btn { transition: all 0.25s; cursor: pointer; }
+    .filter-btn.active, .filter-btn:hover { background: #6c63ff; color: white; border-color: #6c63ff; }
+
+    /* Project cards */
+    .project-card { transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; }
+    .project-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(108,99,255,0.2); }
+    .project-card.hidden-card { display: none; }
+
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(8px); }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-box { background: #16161f; border: 1px solid #252535; border-radius: 1.25rem; max-width: 680px; width: 100%; max-height: 90vh; overflow-y: auto; transform: scale(0.95); transition: transform 0.3s; }
+    .modal-overlay.open .modal-box { transform: scale(1); }
+
+    /* Blog cards */
+    .blog-card { transition: transform 0.3s, box-shadow 0.3s; }
+    .blog-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(108,99,255,0.15); }
+
+    /* Skills bar */
+    .skill-bar-fill { height: 6px; border-radius: 9999px; background: linear-gradient(90deg, #6c63ff, #a09bff); width: 0; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
+
+    /* Contact form */
+    .form-input { background: #111118; border: 1px solid #252535; color: #e8e8f0; border-radius: 0.6rem; padding: 0.75rem 1rem; width: 100%; outline: none; transition: border-color 0.2s, box-shadow 0.2s; font-family: 'Space Grotesk', sans-serif; }
+    .form-input:focus { border-color: #6c63ff; box-shadow: 0 0 0 3px rgba(108,99,255,0.15); }
+    .form-input.error { border-color: #ef4444; }
+    .form-error { color: #ef4444; font-size: 0.78rem; margin-top: 4px; display: none; }
+    .form-error.show { display: block; }
+
+    /* Notification */
+    .notification { position: fixed; top: 5rem; right: 1.5rem; z-index: 9998; background: #16161f; border: 1px solid #6c63ff; border-radius: 0.75rem; padding: 1rem 1.5rem; transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); display: flex; align-items: center; gap: 0.75rem; min-width: 280px; }
+    .notification.show { transform: translateX(0); }
+
+    /* Section label */
+    .section-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #6c63ff; }
+
+    /* Glow button */
+    .btn-glow { position: relative; overflow: hidden; }
+    .btn-glow::after { content: ''; position: absolute; inset: -2px; background: linear-gradient(135deg, #6c63ff, #f5c842, #6c63ff); border-radius: inherit; z-index: -1; opacity: 0; transition: opacity 0.3s; }
+    .btn-glow:hover::after { opacity: 1; }
+
+    /* Testimonial card */
+    .testimonial-card { transition: transform 0.3s; }
+    .testimonial-card:hover { transform: translateY(-4px); }
+
+    /* Mobile menu */
+    .mobile-menu { display: none; }
+    .mobile-menu.open { display: flex; }
+
+    @media (max-width: 768px) {
+      .hero-name { font-size: clamp(2.8rem, 12vw, 5rem); }
+      .desktop-nav { display: none; }
+      .mobile-menu { flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: rgba(10,10,15,0.97); padding: 1.5rem; border-bottom: 1px solid #252535; gap: 1rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============ NAVIGATION ============ -->
+<nav id="navbar" role="navigation" aria-label="Main navigation">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between relative">
+    <a href="#home" class="font-display font-bold text-xl text-white z-10" aria-label="ZMK - Home">
+      <span class="text-accent">Z</span>MK
+    </a>
+
+    <!-- Desktop nav -->
+    <ul class="desktop-nav flex items-center gap-8 text-sm font-medium text-textSub" role="list">
+      <li><a href="#about" class="hover:text-white transition-colors" aria-label="About section">About</a></li>
+      <li><a href="#projects" class="hover:text-white transition-colors" aria-label="Projects section">Projects</a></li>
+      <li><a href="#skills" class="hover:text-white transition-colors" aria-label="Skills section">Skills</a></li>
+      <li><a href="#blog" class="hover:text-white transition-colors" aria-label="Blog section">Blog</a></li>
+      <li><a href="#testimonials" class="hover:text-white transition-colors" aria-label="Testimonials section">Testimonials</a></li>
+      <li>
+        <a href="#contact" class="bg-accent text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-accentLight transition-colors" aria-label="Contact section">Contact</a>
+      </li>
+    </ul>
+
+    <!-- Mobile hamburger -->
+    <button id="menuToggle" class="md:hidden text-white z-10" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobileMenu">
+      <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="mobile-menu" role="menu">
+      <a href="#about" class="text-textSub hover:text-white transition-colors py-1" role="menuitem">About</a>
+      <a href="#projects" class="text-textSub hover:text-white transition-colors py-1" role="menuitem">Projects</a>
+      <a href="#skills" class="text-textSub hover:text-white transition-colors py-1" role="menuitem">Skills</a>
+      <a href="#blog" class="text-textSub hover:text-white transition-colors py-1" role="menuitem">Blog</a>
+      <a href="#testimonials" class="text-textSub hover:text-white transition-colors py-1" role="menuitem">Testimonials</a>
+      <a href="#contact" class="text-accent font-semibold py-1" role="menuitem">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section id="home" class="relative min-h-screen flex items-center overflow-hidden pt-20" aria-label="Hero section">
+  <div class="blob w-96 h-96 bg-accent opacity-10 top-10 -left-20"></div>
+  <div class="blob w-72 h-72 bg-gold opacity-8 bottom-20 right-10"></div>
+
+  <div class="max-w-6xl mx-auto px-6 w-full py-20 relative z-10">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        <p class="section-label mb-4" data-aos="fade-up">// CS Student · Hyderabad, Sindh</p>
+        <h1 class="hero-name text-6xl md:text-7xl text-white mb-2" data-aos="fade-up" data-aos-delay="100">
+          Zaid<br/>Mujtaba<br/><span class="gradient-text">Khan</span>
+        </h1>
+        <p class="text-textSub text-lg mt-6 max-w-md leading-relaxed" data-aos="fade-up" data-aos-delay="200">
+          <span id="typewriter" class="typewriter-text font-medium text-accentLight"></span>
+        </p>
+        <p class="text-textSub mt-3 max-w-md text-sm leading-relaxed" data-aos="fade-up" data-aos-delay="250">
+          Frontend developer passionate about clean, purposeful web experiences & data-driven SEO strategy. Currently building in public.
+        </p>
+        <div class="flex flex-wrap gap-4 mt-8" data-aos="fade-up" data-aos-delay="300">
+          <a href="#projects" class="btn-glow bg-accent text-white px-7 py-3 rounded-xl font-semibold text-sm hover:bg-accentLight transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg" aria-label="View my work">View My Work</a>
+          <a href="#contact" class="border border-border text-textMain px-7 py-3 rounded-xl font-semibold text-sm hover:border-accent hover:text-accent transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg" aria-label="Get in touch">Get in Touch</a>
+        </div>
+
+        <!-- Stats -->
+        <div class="flex gap-10 mt-12" data-aos="fade-up" data-aos-delay="400">
+          <div>
+            <p class="text-3xl font-bold font-display text-white">3+</p>
+            <p class="text-textSub text-xs mt-1">Years Learning</p>
+          </div>
+          <div class="w-px bg-border"></div>
+          <div>
+            <p class="text-3xl font-bold font-display text-white">10+</p>
+            <p class="text-textSub text-xs mt-1">Projects Built</p>
+          </div>
+          <div class="w-px bg-border"></div>
+          <div>
+            <p class="text-3xl font-bold font-display gradient-text">BSE</p>
+            <p class="text-textSub text-xs mt-1">SAU, Tandojam</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Avatar block -->
+      <div class="flex justify-center" data-aos="fade-left" data-aos-delay="200">
+        <div class="relative">
+          <div class="w-64 h-64 rounded-3xl bg-gradient-to-br from-accent/20 to-gold/10 border border-border flex items-center justify-center text-8xl shadow-2xl">
+            👨‍💻
+          </div>
+          <!-- Floating chips -->
+          <div class="absolute -top-4 -right-6 bg-card border border-border rounded-xl px-3 py-2 text-xs font-semibold text-accentLight shadow-lg">
+            🔍 SEO Expert
+          </div>
+          <div class="absolute -bottom-4 -left-6 bg-card border border-border rounded-xl px-3 py-2 text-xs font-semibold text-gold shadow-lg">
+            &lt;/&gt; Web Dev
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about" class="py-28 relative" aria-label="About me section">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid md:grid-cols-2 gap-16 items-center">
+      <div data-aos="fade-right">
+        <div class="bg-card border border-border rounded-2xl p-8 relative overflow-hidden">
+          <div class="blob w-48 h-48 bg-accent opacity-10 -top-10 -right-10"></div>
+          <p class="section-label mb-3">// About Me</p>
+          <h2 class="text-3xl font-display font-bold text-white mb-6">Learning, building,<br/>growing every day</h2>
+          <p class="text-textSub text-sm leading-relaxed mb-4">
+            Hey! I'm <strong class="text-white">Zaid Mujtaba Khan</strong>, a Software Engineering student at <strong class="text-accentLight">Sindh Agriculture University Tandojam</strong>, based in Hyderabad, Sindh.
+          </p>
+          <p class="text-textSub text-sm leading-relaxed mb-4">
+            I blend frontend development with SEO strategy — I don't just build websites, I build websites that <em class="text-white">rank</em>. From clean semantic HTML that Google loves to JavaScript-driven experiences users love.
+          </p>
+          <p class="text-textSub text-sm leading-relaxed">
+            My goal is to become the developer everyone turns to first. One project, one commit, one ranking at a time.
+          </p>
+          <div class="flex gap-4 mt-8">
+            <a href="https://github.com/xam-ops" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-xs text-textSub hover:text-white transition-colors border border-border px-4 py-2 rounded-lg hover:border-accent focus:outline-none focus:ring-2 focus:ring-accent" aria-label="Visit GitHub profile">
+              <span>⚡</span> GitHub
+            </a>
+            <a href="https://linkedin.com/in/zaid-mujtaba-khan" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-xs text-textSub hover:text-white transition-colors border border-border px-4 py-2 rounded-lg hover:border-accent focus:outline-none focus:ring-2 focus:ring-accent" aria-label="Visit LinkedIn profile">
+              <span>💼</span> LinkedIn
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div data-aos="fade-left" data-aos-delay="100">
+        <p class="section-label mb-6">// What I Do</p>
+        <div class="space-y-4">
+          <div class="bg-card border border-border rounded-xl p-5 hover:border-accent transition-colors">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-2xl" aria-hidden="true">🌐</span>
+              <h3 class="font-semibold text-white">Web Development</h3>
+            </div>
+            <p class="text-textSub text-sm">Building clean, responsive interfaces using HTML5, CSS3, JavaScript, and Tailwind CSS.</p>
+          </div>
+          <div class="bg-card border border-border rounded-xl p-5 hover:border-accent transition-colors">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-2xl" aria-hidden="true">🔍</span>
+              <h3 class="font-semibold text-white">SEO Strategy</h3>
+            </div>
+            <p class="text-textSub text-sm">Optimizing content and site architecture to drive organic traffic and improve search rankings.</p>
+          </div>
+          <div class="bg-card border border-border rounded-xl p-5 hover:border-accent transition-colors">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-2xl" aria-hidden="true">📊</span>
+              <h3 class="font-semibold text-white">Performance Optimization</h3>
+            </div>
+            <p class="text-textSub text-sm">Improving Core Web Vitals, load speed, and accessibility for better user experience and rankings.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROJECTS ============ -->
+<section id="projects" class="py-28 relative" aria-label="Projects section">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14" data-aos="fade-up">
+      <p class="section-label mb-3">// University Work</p>
+      <h2 class="text-4xl font-display font-bold text-white">Projects</h2>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="flex flex-wrap gap-3 justify-center mb-10" data-aos="fade-up" data-aos-delay="100" role="group" aria-label="Filter projects by category">
+      <button class="filter-btn active border border-border text-textSub text-sm px-5 py-2 rounded-full font-medium focus:outline-none focus:ring-2 focus:ring-accent" data-filter="all" aria-pressed="true">All</button>
+      <button class="filter-btn border border-border text-textSub text-sm px-5 py-2 rounded-full font-medium focus:outline-none focus:ring-2 focus:ring-accent" data-filter="web" aria-pressed="false">Web Development</button>
+      <button class="filter-btn border border-border text-textSub text-sm px-5 py-2 rounded-full font-medium focus:outline-none focus:ring-2 focus:ring-accent" data-filter="seo" aria-pressed="false">SEO</button>
+      <button class="filter-btn border border-border text-textSub text-sm px-5 py-2 rounded-full font-medium focus:outline-none focus:ring-2 focus:ring-accent" data-filter="ui" aria-pressed="false">UI/UX Design</button>
+      <button class="filter-btn border border-border text-textSub text-sm px-5 py-2 rounded-full font-medium focus:outline-none focus:ring-2 focus:ring-accent" data-filter="other" aria-pressed="false">Other</button>
+    </div>
+
+    <!-- Projects Grid -->
+    <div id="projectsGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- Project 1 -->
+      <article class="project-card bg-card border border-border rounded-2xl overflow-hidden" data-category="web" data-aos="fade-up" data-aos-delay="100"
+        data-title="Personal Portfolio Website"
+        data-desc="A responsive personal portfolio to showcase skills, projects and contact information. Built as part of my frontend development journey."
+        data-tech="HTML5,CSS3,JavaScript,Bootstrap"
+        data-screenshots="🌐,💻,📱"
+        data-live="https://github.com/xam-ops"
+        data-github="https://github.com/xam-ops"
+        aria-label="Personal Portfolio Website project">
+        <div class="h-40 bg-gradient-to-br from-accent/30 to-purple-900/30 flex items-center justify-center text-5xl" aria-hidden="true">🌐</div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-xs bg-accent/20 text-accentLight px-2 py-1 rounded-full font-medium">Web Dev</span>
+          </div>
+          <h3 class="font-semibold text-white text-lg mb-2">Personal Portfolio Website</h3>
+          <p class="text-textSub text-sm leading-relaxed mb-4">A responsive portfolio showcasing skills, projects and contact information.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">HTML5</span>
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">CSS3</span>
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">JavaScript</span>
+          </div>
+          <button class="open-modal text-accent text-sm font-medium hover:text-accentLight transition-colors focus:outline-none focus:underline" aria-label="View Personal Portfolio Website details">View Details →</button>
+        </div>
+      </article>
+
+      <!-- Project 2 -->
+      <article class="project-card bg-card border border-border rounded-2xl overflow-hidden" data-category="web" data-aos="fade-up" data-aos-delay="150"
+        data-title="University Assignment Project"
+        data-desc="A web-based project developed as part of my Software Engineering coursework, applying core frontend concepts in a real-world context."
+        data-tech="HTML5,Bootstrap,CSS3"
+        data-screenshots="📚,🎓,💡"
+        data-live="#"
+        data-github="https://github.com/xam-ops"
+        aria-label="University Assignment Project">
+        <div class="h-40 bg-gradient-to-br from-green-900/30 to-teal-900/30 flex items-center justify-center text-5xl" aria-hidden="true">📚</div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full font-medium">University</span>
+          </div>
+          <h3 class="font-semibold text-white text-lg mb-2">University Assignment Project</h3>
+          <p class="text-textSub text-sm leading-relaxed mb-4">Coursework project applying core frontend concepts learned in class.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">HTML5</span>
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">Bootstrap</span>
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">CSS3</span>
+          </div>
+          <button class="open-modal text-accent text-sm font-medium hover:text-accentLight transition-colors focus:outline-none focus:underline" aria-label="View University Assignment Project details">View Details →</button>
+        </div>
+      </article>
+
+      <!-- Project 3 -->
+      <article class="project-card bg-card border border-border rounded-2xl overflow-hidden" data-category="seo" data-aos="fade-up" data-aos-delay="200"
+        data-title="SEO Audit & Strategy Report"
+        data-desc="A comprehensive SEO audit for a local business website, identifying technical issues, keyword opportunities, and content gaps. Delivered a full strategy report."
+        data-tech="Google Search Console,SEMrush,Ahrefs,Technical SEO"
+        data-screenshots="📊,🔍,📈"
+        data-live="#"
+        data-github="#"
+        aria-label="SEO Audit project">
+        <div class="h-40 bg-gradient-to-br from-gold/20 to-orange-900/20 flex items-center justify-center text-5xl" aria-hidden="true">📊</div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-xs bg-gold/20 text-gold px-2 py-1 rounded-full font-medium">SEO</span>
+          </div>
+          <h3 class="font-semibold text-white text-lg mb-2">SEO Audit & Strategy Report</h3>
+          <p class="text-textSub text-sm leading-relaxed mb-4">Full technical & content SEO audit for a local business with actionable strategy.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">GSC</span>
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">SEMrush</span>
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">Ahrefs</span>
+          </div>
+          <button class="open-modal text-accent text-sm font-medium hover:text-accentLight transition-colors focus:outline-none focus:underline" aria-label="View SEO Audit project details">View Details →</button>
+        </div>
+      </article>
+
+      <!-- Project 4 -->
+      <article class="project-card bg-card border border-border rounded-2xl overflow-hidden" data-category="web" data-aos="fade-up" data-aos-delay="100"
+        data-title="Clothing Store Backend (Login System)"
+        data-desc="A backend clothing store application featuring full user authentication — registration, login, credential editing, and permanent account deletion."
+        data-tech="Python,Backend,Authentication,Database"
+        data-screenshots="🛍️,🔐,👤"
+        data-live="#"
+        data-github="https://github.com/xam-ops"
+        aria-label="Clothing Store Backend project">
+        <div class="h-40 bg-gradient-to-br from-pink-900/30 to-red-900/20 flex items-center justify-center text-5xl" aria-hidden="true">🛍️</div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-xs bg-pink-500/20 text-pink-400 px-2 py-1 rounded-full font-medium">Backend</span>
+          </div>
+          <h3 class="font-semibold text-white text-lg mb-2">Clothing Store (Auth System)</h3>
+          <p class="text-textSub text-sm leading-relaxed mb-4">User registration, login, credential management and account deletion system.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">Python</span>
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">Auth</span>
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">DB</span>
+          </div>
+          <button class="open-modal text-accent text-sm font-medium hover:text-accentLight transition-colors focus:outline-none focus:underline" aria-label="View Clothing Store project details">View Details →</button>
+        </div>
+      </article>
+
+      <!-- Project 5 -->
+      <article class="project-card bg-card border border-border rounded-2xl overflow-hidden" data-category="ui" data-aos="fade-up" data-aos-delay="150"
+        data-title="UI/UX Redesign Concept"
+        data-desc="A redesign concept for a university portal focusing on improved accessibility, cleaner navigation, and mobile-first design principles."
+        data-tech="Figma,Tailwind CSS,Accessibility,Mobile-first"
+        data-screenshots="🎨,📱,♿"
+        data-live="#"
+        data-github="#"
+        aria-label="UI/UX Redesign project">
+        <div class="h-40 bg-gradient-to-br from-blue-900/30 to-cyan-900/20 flex items-center justify-center text-5xl" aria-hidden="true">🎨</div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded-full font-medium">UI/UX</span>
+          </div>
+          <h3 class="font-semibold text-white text-lg mb-2">University Portal Redesign</h3>
+          <p class="text-textSub text-sm leading-relaxed mb-4">Mobile-first redesign concept improving accessibility and user experience.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">Figma</span>
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">Tailwind</span>
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">A11y</span>
+          </div>
+          <button class="open-modal text-accent text-sm font-medium hover:text-accentLight transition-colors focus:outline-none focus:underline" aria-label="View UI/UX Redesign project details">View Details →</button>
+        </div>
+      </article>
+
+      <!-- Project 6 -->
+      <article class="project-card bg-card border border-border rounded-2xl overflow-hidden" data-category="other" data-aos="fade-up" data-aos-delay="200"
+        data-title="Advanced Portfolio V3 (This Site)"
+        data-desc="This portfolio itself — Week 3 upgrade featuring project filtering, modal details, blog section, GSAP animations, Tailwind CSS, full accessibility and contact form validation."
+        data-tech="HTML5,Tailwind CSS,GSAP,JavaScript,AOS,Accessibility"
+        data-screenshots="🚀,✨,💎"
+        data-live="#"
+        data-github="https://github.com/xam-ops"
+        aria-label="This portfolio website project">
+        <div class="h-40 bg-gradient-to-br from-accent/20 to-gold/10 flex items-center justify-center text-5xl" aria-hidden="true">🚀</div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-xs bg-accent/20 text-accentLight px-2 py-1 rounded-full font-medium">This Site</span>
+          </div>
+          <h3 class="font-semibold text-white text-lg mb-2">Advanced Portfolio V3</h3>
+          <p class="text-textSub text-sm leading-relaxed mb-4">This portfolio — GSAP animations, filtering, modals, blog, and full a11y.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">Tailwind</span>
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">GSAP</span>
+            <span class="text-xs bg-surface border border-border px-2 py-1 rounded text-textSub">JS</span>
+          </div>
+          <button class="open-modal text-accent text-sm font-medium hover:text-accentLight transition-colors focus:outline-none focus:underline" aria-label="View Advanced Portfolio V3 details">View Details →</button>
+        </div>
+      </article>
+
+    </div>
+
+    <p class="text-center text-textSub text-sm mt-8" data-aos="fade-up">
+      More projects coming soon — currently building in public on <a href="https://github.com/xam-ops" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline focus:outline-none focus:underline" aria-label="View all projects on GitHub">GitHub</a>.
+    </p>
+  </div>
+</section>
+
+<!-- ============ PROJECT MODAL ============ -->
+<div id="projectModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+  <div class="modal-box p-8">
+    <div class="flex items-start justify-between mb-6">
+      <div>
+        <p class="section-label mb-1">// Project Details</p>
+        <h2 id="modalTitle" class="text-2xl font-display font-bold text-white"></h2>
+      </div>
+      <button id="closeModal" class="text-textSub hover:text-white transition-colors ml-4 mt-1 p-1 rounded focus:outline-none focus:ring-2 focus:ring-accent" aria-label="Close project details modal">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Screenshots -->
+    <div id="modalScreenshots" class="flex gap-4 mb-6">
+    </div>
+
+    <p id="modalDesc" class="text-textSub text-sm leading-relaxed mb-6"></p>
+
+    <div class="mb-6">
+      <p class="text-xs font-semibold text-textSub uppercase tracking-wider mb-3">Technologies Used</p>
+      <div id="modalTech" class="flex flex-wrap gap-2"></div>
+    </div>
+
+    <div class="flex gap-4">
+      <a id="modalLive" href="#" target="_blank" rel="noopener noreferrer" class="bg-accent text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-accentLight transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-card" aria-label="View live demo">Live Demo</a>
+      <a id="modalGithub" href="#" target="_blank" rel="noopener noreferrer" class="border border-border text-textMain px-5 py-2.5 rounded-lg text-sm font-semibold hover:border-accent hover:text-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-card" aria-label="View source code on GitHub">GitHub</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SKILLS ============ -->
+<section id="skills" class="py-28 bg-surface/50 relative" aria-label="Skills section">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14" data-aos="fade-up">
+      <p class="section-label mb-3">// What I Work With</p>
+      <h2 class="text-4xl font-display font-bold text-white">Skills & Tools</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- Web Frontend -->
+      <div class="bg-card border border-border rounded-2xl p-7" data-aos="fade-up" data-aos-delay="100">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="text-xl" aria-hidden="true">🌐</span>
+          <h3 class="font-semibold text-white">Web Frontend</h3>
+        </div>
+        <div class="space-y-5">
+          <div>
+            <div class="flex justify-between text-xs mb-2"><span class="text-textSub">HTML5 / CSS3</span><span class="text-accentLight font-medium">85%</span></div>
+            <div class="h-1.5 bg-border rounded-full"><div class="skill-bar-fill" data-width="85"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs mb-2"><span class="text-textSub">JavaScript</span><span class="text-accentLight font-medium">70%</span></div>
+            <div class="h-1.5 bg-border rounded-full"><div class="skill-bar-fill" data-width="70"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs mb-2"><span class="text-textSub">Tailwind CSS</span><span class="text-accentLight font-medium">75%</span></div>
+            <div class="h-1.5 bg-border rounded-full"><div class="skill-bar-fill" data-width="75"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs mb-2"><span class="text-textSub">Bootstrap</span><span class="text-accentLight font-medium">70%</span></div>
+            <div class="h-1.5 bg-border rounded-full"><div class="skill-bar-fill" data-width="70"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEO & Marketing -->
+      <div class="bg-card border border-border rounded-2xl p-7" data-aos="fade-up" data-aos-delay="150">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="text-xl" aria-hidden="true">🔍</span>
+          <h3 class="font-semibold text-white">SEO & Marketing</h3>
+        </div>
+        <div class="space-y-5">
+          <div>
+            <div class="flex justify-between text-xs mb-2"><span class="text-textSub">On-Page SEO</span><span class="text-gold font-medium">80%</span></div>
+            <div class="h-1.5 bg-border rounded-full"><div class="skill-bar-fill" data-width="80" style="background: linear-gradient(90deg, #f5c842, #fbbf24)"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs mb-2"><span class="text-textSub">Technical SEO</span><span class="text-gold font-medium">72%</span></div>
+            <div class="h-1.5 bg-border rounded-full"><div class="skill-bar-fill" data-width="72" style="background: linear-gradient(90deg, #f5c842, #fbbf24)"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs mb-2"><span class="text-textSub">Keyword Research</span><span class="text-gold font-medium">78%</span></div>
+            <div class="h-1.5 bg-border rounded-full"><div class="skill-bar-fill" data-width="78" style="background: linear-gradient(90deg, #f5c842, #fbbf24)"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs mb-2"><span class="text-textSub">Content Strategy</span><span class="text-gold font-medium">75%</span></div>
+            <div class="h-1.5 bg-border rounded-full"><div class="skill-bar-fill" data-width="75" style="background: linear-gradient(90deg, #f5c842, #fbbf24)"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Currently Learning -->
+      <div class="bg-card border border-border rounded-2xl p-7" data-aos="fade-up" data-aos-delay="200">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="text-xl" aria-hidden="true">🚀</span>
+          <h3 class="font-semibold text-white">Currently Learning</h3>
+        </div>
+        <div class="space-y-4">
+          <div class="flex items-center gap-3 text-sm">
+            <span class="w-2 h-2 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+            <span class="text-textSub">React.js</span>
+            <span class="ml-auto text-xs text-accent">In Progress</span>
+          </div>
+          <div class="flex items-center gap-3 text-sm">
+            <span class="w-2 h-2 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+            <span class="text-textSub">Next.js</span>
+            <span class="ml-auto text-xs text-accent">In Progress</span>
+          </div>
+          <div class="flex items-center gap-3 text-sm">
+            <span class="w-2 h-2 rounded-full bg-gold flex-shrink-0" aria-hidden="true"></span>
+            <span class="text-textSub">GSAP Animations</span>
+            <span class="ml-auto text-xs text-gold">Active</span>
+          </div>
+          <div class="flex items-center gap-3 text-sm">
+            <span class="w-2 h-2 rounded-full bg-green-500 flex-shrink-0" aria-hidden="true"></span>
+            <span class="text-textSub">Git / GitHub</span>
+            <span class="ml-auto text-xs text-green-400">Comfortable</span>
+          </div>
+          <div class="flex items-center gap-3 text-sm">
+            <span class="w-2 h-2 rounded-full bg-accent flex-shrink-0" aria-hidden="true"></span>
+            <span class="text-textSub">Python</span>
+            <span class="ml-auto text-xs text-accent">Basics</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BLOG ============ -->
+<section id="blog" class="py-28 relative" aria-label="Blog and articles section">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14" data-aos="fade-up">
+      <p class="section-label mb-3">// Thoughts & Insights</p>
+      <h2 class="text-4xl font-display font-bold text-white">Blog & Articles</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+
+      <!-- Article 1 -->
+      <article class="blog-card bg-card border border-border rounded-2xl overflow-hidden" data-aos="fade-up" data-aos-delay="100" aria-label="Blog article about SEO for beginners">
+        <div class="h-44 bg-gradient-to-br from-gold/20 to-orange-900/20 flex items-center justify-center text-5xl" aria-hidden="true">🔍</div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-xs bg-gold/20 text-gold px-2 py-1 rounded-full font-medium">SEO</span>
+            <span class="text-textSub text-xs">June 2025</span>
+          </div>
+          <h3 class="font-semibold text-white text-lg mb-3 leading-snug">SEO for Developers: Why Clean Code = Better Rankings</h3>
+          <p class="text-textSub text-sm leading-relaxed mb-5">How semantic HTML, fast load times, and proper heading structure directly impact your Google rankings — a developer's lens on SEO.</p>
+          <button class="blog-read-more text-accent text-sm font-medium hover:text-accentLight transition-colors focus:outline-none focus:underline flex items-center gap-1" data-article="1" aria-label="Read full article about SEO for developers">
+            Read More <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- Article 2 -->
+      <article class="blog-card bg-card border border-border rounded-2xl overflow-hidden" data-aos="fade-up" data-aos-delay="150" aria-label="Blog article about Tailwind CSS tips">
+        <div class="h-44 bg-gradient-to-br from-accent/20 to-purple-900/20 flex items-center justify-center text-5xl" aria-hidden="true">🎨</div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-xs bg-accent/20 text-accentLight px-2 py-1 rounded-full font-medium">Web Dev</span>
+            <span class="text-textSub text-xs">May 2025</span>
+          </div>
+          <h3 class="font-semibold text-white text-lg mb-3 leading-snug">5 Tailwind CSS Tricks I Wish I Knew Earlier</h3>
+          <p class="text-textSub text-sm leading-relaxed mb-5">From utility composition to responsive breakpoints — the Tailwind patterns that leveled up my workflow and made my CSS actually maintainable.</p>
+          <button class="blog-read-more text-accent text-sm font-medium hover:text-accentLight transition-colors focus:outline-none focus:underline flex items-center gap-1" data-article="2" aria-label="Read full article about Tailwind CSS tricks">
+            Read More <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- Article 3 -->
+      <article class="blog-card bg-card border border-border rounded-2xl overflow-hidden" data-aos="fade-up" data-aos-delay="200" aria-label="Blog article about Core Web Vitals">
+        <div class="h-44 bg-gradient-to-br from-green-900/30 to-teal-900/20 flex items-center justify-center text-5xl" aria-hidden="true">⚡</div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full font-medium">Performance</span>
+            <span class="text-textSub text-xs">April 2025</span>
+          </div>
+          <h3 class="font-semibold text-white text-lg mb-3 leading-snug">Core Web Vitals Explained: What Every Dev Must Know in 2025</h3>
+          <p class="text-textSub text-sm leading-relaxed mb-5">LCP, FID, CLS — what these Google metrics actually mean, why they affect both your ranking and user experience, and how to fix them.</p>
+          <button class="blog-read-more text-accent text-sm font-medium hover:text-accentLight transition-colors focus:outline-none focus:underline flex items-center gap-1" data-article="3" aria-label="Read full article about Core Web Vitals">
+            Read More <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="text-center mt-12" data-aos="fade-up">
+      <a href="#blog" class="border border-border text-textSub text-sm px-8 py-3 rounded-xl font-medium hover:border-accent hover:text-accent transition-all inline-block focus:outline-none focus:ring-2 focus:ring-accent" aria-label="View all blog articles">View All Articles</a>
+    </div>
+  </div>
+</section>
+
+<!-- Blog article expanded modal -->
+<div id="blogModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="blogModalTitle" aria-hidden="true">
+  <div class="modal-box p-8 max-w-2xl">
+    <div class="flex items-start justify-between mb-6">
+      <h2 id="blogModalTitle" class="text-xl font-display font-bold text-white pr-4"></h2>
+      <button id="closeBlogModal" class="text-textSub hover:text-white transition-colors flex-shrink-0 p-1 rounded focus:outline-none focus:ring-2 focus:ring-accent" aria-label="Close article">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div id="blogModalContent" class="text-textSub text-sm leading-relaxed space-y-4"></div>
+  </div>
+</div>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section id="testimonials" class="py-28 bg-surface/50 relative" aria-label="Testimonials section">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14" data-aos="fade-up">
+      <p class="section-label mb-3">// Kind Words</p>
+      <h2 class="text-4xl font-display font-bold text-white">What people say</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="testimonial-card bg-card border border-border rounded-2xl p-6" data-aos="fade-up" data-aos-delay="100">
+        <p class="text-textSub text-sm leading-relaxed mb-6">"Zaid has an incredible drive to learn. He picks up new concepts quickly and always goes beyond what's required. A truly passionate developer."</p>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-lg" aria-hidden="true">👨‍🏫</div>
+          <div>
+            <p class="font-semibold text-white text-sm">Prof. Ali Raza</p>
+            <p class="text-textSub text-xs">SAU, Tandojam</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card bg-card border border-border rounded-2xl p-6" data-aos="fade-up" data-aos-delay="150">
+        <p class="text-textSub text-sm leading-relaxed mb-6">"Working with Zaid on group projects is always a great experience. He always keeps the team moving forward and has a solution ready."</p>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center text-lg" aria-hidden="true">👨‍💻</div>
+          <div>
+            <p class="font-semibold text-white text-sm">Ahmed Siddiqui</p>
+            <p class="text-textSub text-xs">Classmate, BSE</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card bg-card border border-border rounded-2xl p-6" data-aos="fade-up" data-aos-delay="200">
+        <p class="text-textSub text-sm leading-relaxed mb-6">"Zaid's passion for programming is genuine. He spends his free time practicing and building things just because he loves it. That mindset will take him far."</p>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-lg" aria-hidden="true">👩‍💼</div>
+          <div>
+            <p class="font-semibold text-white text-sm">Sara Memon</p>
+            <p class="text-textSub text-xs">Senior Student</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact" class="py-28 relative" aria-label="Contact section">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14" data-aos="fade-up">
+      <p class="section-label mb-3">// Get In Touch</p>
+      <h2 class="text-4xl font-display font-bold text-white">Let's connect<br/><span class="gradient-text">&amp; collaborate</span></h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-12">
+      <!-- Contact form -->
+      <div data-aos="fade-right">
+        <form id="contactForm" novalidate aria-label="Contact form">
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label for="firstName" class="text-xs text-textSub font-medium block mb-1.5">First name <span class="text-red-400" aria-hidden="true">*</span></label>
+              <input id="firstName" name="firstName" type="text" class="form-input" placeholder="Zaid" autocomplete="given-name" aria-required="true" aria-describedby="firstNameError" />
+              <p id="firstNameError" class="form-error" role="alert">Please enter your first name.</p>
+            </div>
+            <div>
+              <label for="lastName" class="text-xs text-textSub font-medium block mb-1.5">Last name <span class="text-red-400" aria-hidden="true">*</span></label>
+              <input id="lastName" name="lastName" type="text" class="form-input" placeholder="Khan" autocomplete="family-name" aria-required="true" aria-describedby="lastNameError" />
+              <p id="lastNameError" class="form-error" role="alert">Please enter your last name.</p>
+            </div>
+          </div>
+          <div class="mb-4">
+            <label for="email" class="text-xs text-textSub font-medium block mb-1.5">Email <span class="text-red-400" aria-hidden="true">*</span></label>
+            <input id="email" name="email" type="email" class="form-input" placeholder="you@example.com" autocomplete="email" aria-required="true" aria-describedby="emailError" />
+            <p id="emailError" class="form-error" role="alert">Please enter a valid email address.</p>
+          </div>
+          <div class="mb-4">
+            <label for="subject" class="text-xs text-textSub font-medium block mb-1.5">Subject</label>
+            <input id="subject" name="subject" type="text" class="form-input" placeholder="Project idea / Collaboration..." autocomplete="off" />
+          </div>
+          <div class="mb-6">
+            <label for="message" class="text-xs text-textSub font-medium block mb-1.5">Message <span class="text-red-400" aria-hidden="true">*</span></label>
+            <textarea id="message" name="message" rows="5" class="form-input resize-none" placeholder="Tell me what you have in mind..." aria-required="true" aria-describedby="messageError"></textarea>
+            <p id="messageError" class="form-error" role="alert">Please write a message.</p>
+          </div>
+          <button type="submit" id="submitBtn" class="btn-glow bg-accent text-white w-full py-3.5 rounded-xl font-semibold text-sm hover:bg-accentLight transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg">
+            Send Message ✉️
+          </button>
+        </form>
+      </div>
+
+      <!-- Contact info -->
+      <div data-aos="fade-left" data-aos-delay="100">
+        <div class="space-y-5">
+          <a href="mailto:zaidmujtaba548@gmail.com" class="flex items-center gap-4 bg-card border border-border rounded-xl p-5 hover:border-accent transition-colors group focus:outline-none focus:ring-2 focus:ring-accent" aria-label="Send email to zaidmujtaba548@gmail.com">
+            <span class="text-2xl group-hover:scale-110 transition-transform" aria-hidden="true">📧</span>
+            <div>
+              <p class="text-xs text-textSub font-medium uppercase tracking-wider mb-1">Email</p>
+              <p class="text-white text-sm font-medium">zaidmujtaba548@gmail.com</p>
+            </div>
+          </a>
+          <div class="flex items-center gap-4 bg-card border border-border rounded-xl p-5">
+            <span class="text-2xl" aria-hidden="true">📍</span>
+            <div>
+              <p class="text-xs text-textSub font-medium uppercase tracking-wider mb-1">Location</p>
+              <p class="text-white text-sm font-medium">Hyderabad, Sindh, Pakistan</p>
+            </div>
+          </div>
+          <a href="https://github.com/xam-ops" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 bg-card border border-border rounded-xl p-5 hover:border-accent transition-colors group focus:outline-none focus:ring-2 focus:ring-accent" aria-label="Visit GitHub profile">
+            <span class="text-2xl group-hover:scale-110 transition-transform" aria-hidden="true">⚡</span>
+            <div>
+              <p class="text-xs text-textSub font-medium uppercase tracking-wider mb-1">GitHub</p>
+              <p class="text-white text-sm font-medium">github.com/xam-ops</p>
+            </div>
+          </a>
+          <a href="tel:+923108225630" class="flex items-center gap-4 bg-card border border-border rounded-xl p-5 hover:border-accent transition-colors group focus:outline-none focus:ring-2 focus:ring-accent" aria-label="Call +92 310 822 5630">
+            <span class="text-2xl group-hover:scale-110 transition-transform" aria-hidden="true">💬</span>
+            <div>
+              <p class="text-xs text-textSub font-medium uppercase tracking-wider mb-1">WhatsApp</p>
+              <p class="text-white text-sm font-medium">+92 310 622 5630</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="border-t border-border py-8" role="contentinfo">
+  <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+    <p class="text-textSub text-sm">© 2025 Zaid Mujtaba Khan. All rights reserved.</p>
+    <a href="#home" class="text-textSub text-sm hover:text-accent transition-colors focus:outline-none focus:underline" aria-label="Back to top of page">Back to top ↑</a>
+  </div>
+</footer>
+
+<!-- ============ NOTIFICATION ============ -->
+<div id="notification" class="notification" role="status" aria-live="polite" aria-atomic="true">
+  <span id="notifIcon" aria-hidden="true">✅</span>
+  <div>
+    <p id="notifTitle" class="font-semibold text-white text-sm"></p>
+    <p id="notifMsg" class="text-textSub text-xs mt-0.5"></p>
+  </div>
+</div>
+
+<!-- ============ JAVASCRIPT ============ -->
+<script>
+  // ── Init AOS ──
+  AOS.init({ duration: 700, once: true, offset: 80 });
+
+  // ── GSAP Register ──
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ── Hero entrance ──
+  gsap.from('.hero-name', { opacity: 0, y: 60, duration: 1, ease: 'power3.out', delay: 0.2 });
+
+  // ── Typewriter ──
+  const roles = ['SEO Expert', 'Web Developer', 'Frontend Dev', 'BSE Student @ SAU'];
+  let ri = 0, ci = 0, deleting = false;
+  const tw = document.getElementById('typewriter');
+  function type() {
+    const r = roles[ri];
+    if (!deleting) {
+      tw.textContent = r.slice(0, ++ci);
+      if (ci === r.length) { deleting = true; setTimeout(type, 1500); return; }
+    } else {
+      tw.textContent = r.slice(0, --ci);
+      if (ci === 0) { deleting = false; ri = (ri + 1) % roles.length; }
+    }
+    setTimeout(type, deleting ? 50 : 90);
+  }
+  setTimeout(type, 800);
+
+  // ── Nav scroll ──
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
+  }, { passive: true });
+
+  // ── Mobile menu ──
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuToggle.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    menuToggle.setAttribute('aria-expanded', isOpen);
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => { mobileMenu.classList.remove('open'); menuToggle.setAttribute('aria-expanded', 'false'); });
+  });
+
+  // ── Project Filtering ──
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const projectCards = document.querySelectorAll('.project-card');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+      const filter = btn.dataset.filter;
+
+      projectCards.forEach(card => {
+        const show = filter === 'all' || card.dataset.category === filter;
+        if (show) {
+          card.style.display = '';
+          gsap.fromTo(card, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' });
+        } else {
+          gsap.to(card, { opacity: 0, y: -10, duration: 0.2, ease: 'power2.in', onComplete: () => card.style.display = 'none' });
+        }
+      });
+    });
+  });
+
+  // ── Project Modal ──
+  const modal = document.getElementById('projectModal');
+  const closeModalBtn = document.getElementById('closeModal');
+
+  function openModal(card) {
+    document.getElementById('modalTitle').textContent = card.dataset.title;
+    document.getElementById('modalDesc').textContent = card.dataset.desc;
+
+    const techContainer = document.getElementById('modalTech');
+    techContainer.innerHTML = '';
+    card.dataset.tech.split(',').forEach(t => {
+      const span = document.createElement('span');
+      span.className = 'text-xs bg-accent/20 text-accentLight px-3 py-1.5 rounded-full font-medium';
+      span.textContent = t.trim();
+      techContainer.appendChild(span);
+    });
+
+    const screenshots = document.getElementById('modalScreenshots');
+    screenshots.innerHTML = '';
+    card.dataset.screenshots.split(',').forEach(s => {
+      const div = document.createElement('div');
+      div.className = 'flex-1 bg-surface border border-border rounded-xl h-24 flex items-center justify-center text-3xl';
+      div.setAttribute('aria-hidden', 'true');
+      div.textContent = s.trim();
+      screenshots.appendChild(div);
+    });
+
+    document.getElementById('modalLive').href = card.dataset.live;
+    document.getElementById('modalGithub').href = card.dataset.github;
+
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    closeModalBtn.focus();
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.open-modal').forEach(btn => {
+    btn.addEventListener('click', () => openModal(btn.closest('.project-card')));
+  });
+  closeModalBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+  // ── Blog Modal ──
+  const blogModal = document.getElementById('blogModal');
+  const closeBlogModal = document.getElementById('closeBlogModal');
+
+  const articles = {
+    1: {
+      title: 'SEO for Developers: Why Clean Code = Better Rankings',
+      content: `<p>As a developer, you already write code. But are you writing code that Google can read?</p>
+        <p>Semantic HTML is the foundation. Using &lt;h1&gt; through &lt;h6&gt; in proper order, &lt;nav&gt;, &lt;main&gt;, &lt;article&gt;, and &lt;section&gt; tags — these tell search engine crawlers exactly what your content is and where it fits on the page.</p>
+        <p>Load speed is ranking factor. Google's Core Web Vitals measure LCP (Largest Contentful Paint), FID (First Input Delay), and CLS (Cumulative Layout Shift). A site that loads in 1 second converts 3x better than one that loads in 5 seconds — and ranks higher too.</p>
+        <p>Clean, readable URLs matter. Avoid query strings like ?id=123 — instead use /blog/seo-for-developers. Every URL is a ranking signal.</p>
+        <p>As a developer who understands SEO, you're rare. That's your competitive advantage.</p>`
+    },
+    2: {
+      title: '5 Tailwind CSS Tricks I Wish I Knew Earlier',
+      content: `<p>I've been using Tailwind for over a year and these tricks changed how I write UI.</p>
+        <p><strong class="text-white">1. Group hover.</strong> Use group on a parent and group-hover: on children to create hover effects that ripple through an element — perfect for cards.</p>
+        <p><strong class="text-white">2. Arbitrary values.</strong> Need a very specific size? Use square brackets: w-[342px] or text-[13px]. No need to customize your config for one-offs.</p>
+        <p><strong class="text-white">3. @apply in your CSS.</strong> When a pattern repeats 20 times, abstract it with @apply. Your HTML stays readable, your CSS stays maintainable.</p>
+        <p><strong class="text-white">4. Dark mode with dark:.</strong> Built-in dark mode support. Just add dark: prefix and toggle the class on your root element.</p>
+        <p><strong class="text-white">5. Responsive stacking.</strong> Start mobile-first with flex-col then switch to md:flex-row. Tailwind's responsive design is incredibly intuitive once it clicks.</p>`
+    },
+    3: {
+      title: 'Core Web Vitals Explained: What Every Dev Must Know in 2025',
+      content: `<p>Google made Core Web Vitals an official ranking signal. Here's what they actually are and how to improve them.</p>
+        <p><strong class="text-white">LCP — Largest Contentful Paint.</strong> Measures how long the largest visible element takes to load. Target: under 2.5 seconds. Fix: optimize images, use CDN, preload hero assets.</p>
+        <p><strong class="text-white">FID — First Input Delay.</strong> (Now replaced by INP — Interaction to Next Paint.) Measures responsiveness. Target: under 200ms. Fix: reduce JavaScript execution time, defer non-critical scripts.</p>
+        <p><strong class="text-white">CLS — Cumulative Layout Shift.</strong> Measures visual stability — how much your page layout shifts while loading. Target: under 0.1. Fix: always set width and height on images, avoid injecting content above existing content.</p>
+        <p>You can measure all three using Google PageSpeed Insights, Lighthouse, or Chrome DevTools. Start there, then fix your biggest offender first.</p>`
+    }
+  };
+
+  document.querySelectorAll('.blog-read-more').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const a = articles[btn.dataset.article];
+      document.getElementById('blogModalTitle').textContent = a.title;
+      document.getElementById('blogModalContent').innerHTML = a.content;
+      blogModal.classList.add('open');
+      blogModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      closeBlogModal.focus();
+    });
+  });
+
+  closeBlogModal.addEventListener('click', () => {
+    blogModal.classList.remove('open');
+    blogModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  });
+  blogModal.addEventListener('click', (e) => {
+    if (e.target === blogModal) {
+      blogModal.classList.remove('open');
+      blogModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // ── Keyboard accessibility for modals ──
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (modal.classList.contains('open')) closeModal();
+      if (blogModal.classList.contains('open')) {
+        blogModal.classList.remove('open');
+        blogModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+    }
+  });
+
+  // ── Skill bars ──
+  const skillBars = document.querySelectorAll('.skill-bar-fill');
+  const skillObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const fill = entry.target;
+        const width = fill.dataset.width;
+        setTimeout(() => { fill.style.width = width + '%'; }, 200);
+        skillObserver.unobserve(fill);
+      }
+    });
+  }, { threshold: 0.3 });
+  skillBars.forEach(bar => skillObserver.observe(bar));
+
+  // ── GSAP ScrollTrigger section reveals ──
+  gsap.utils.toArray('section').forEach(section => {
+    gsap.from(section.querySelector('h2') || section.querySelector('h1'), {
+      scrollTrigger: { trigger: section, start: 'top 80%', once: true },
+      opacity: 0, y: 30, duration: 0.8, ease: 'power2.out'
+    });
+  });
+
+  // ── Contact Form Validation ──
+  const form = document.getElementById('contactForm');
+
+  function showError(id, show) {
+    const input = document.getElementById(id);
+    const err = document.getElementById(id + 'Error');
+    if (!err) return;
+    if (show) {
+      input.classList.add('error');
+      err.classList.add('show');
+    } else {
+      input.classList.remove('error');
+      err.classList.remove('show');
+    }
+  }
+
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function showNotification(icon, title, msg, success = true) {
+    const notif = document.getElementById('notification');
+    document.getElementById('notifIcon').textContent = icon;
+    document.getElementById('notifTitle').textContent = title;
+    document.getElementById('notifMsg').textContent = msg;
+    notif.style.borderColor = success ? '#6c63ff' : '#ef4444';
+    notif.classList.add('show');
+    setTimeout(() => notif.classList.remove('show'), 4000);
+  }
+
+  // Live validation
+  ['firstName', 'lastName', 'email', 'message'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', () => {
+      if (id === 'email') {
+        showError(id, el.value && !validateEmail(el.value));
+      } else {
+        showError(id, false);
+      }
+    });
+    el.addEventListener('blur', () => {
+      if (id === 'email') {
+        showError(id, !validateEmail(el.value));
+      } else {
+        showError(id, !el.value.trim());
+      }
+    });
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let valid = true;
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
+
+    if (!firstName) { showError('firstName', true); valid = false; }
+    else showError('firstName', false);
+
+    if (!lastName) { showError('lastName', true); valid = false; }
+    else showError('lastName', false);
+
+    if (!validateEmail(email)) { showError('email', true); valid = false; }
+    else showError('email', false);
+
+    if (!message) { showError('message', true); valid = false; }
+    else showError('message', false);
+
+    if (!valid) {
+      showNotification('❌', 'Please fix the errors', 'Check the highlighted fields.', false);
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.textContent = 'Sending... ⏳';
+    btn.disabled = true;
+
+    setTimeout(() => {
+      form.reset();
+      btn.textContent = 'Send Message ✉️';
+      btn.disabled = false;
+      showNotification('✅', 'Message sent!', 'I\'ll get back to you soon, ' + firstName + '!');
+    }, 1400);
+  });
+
+  // ── Floating particles in hero ──
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.4;';
+  document.getElementById('home').appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  function resize() { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+  for (let i = 0; i < 40; i++) {
+    particles.push({ x: Math.random()*W, y: Math.random()*H, r: Math.random()*1.5+0.5, vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3, a: Math.random() });
+  }
+  function animateParticles() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.a += 0.01;
+      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(108,99,255,${0.3 + Math.sin(p.a)*0.3})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(animateParticles);
+  }
+  animateParticles();
+
+  console.log('%cZaid Mujtaba Khan Portfolio v3', 'color:#6c63ff;font-size:1.2rem;font-weight:bold;');
+  console.log('%c✅ Built with Tailwind CSS + GSAP | Week 3 Codiora Internship', 'color:#9090a8;');
+</script>
+
+</body>
+</html>
