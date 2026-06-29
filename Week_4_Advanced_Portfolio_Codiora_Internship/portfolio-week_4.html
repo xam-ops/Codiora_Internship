@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zaid Mujtaba Khan — Frontend Developer & SEO Expert</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- React + ReactDOM via CDN (no install needed) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+
+  <!-- Babel (compiles JSX in browser) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            bg: 'var(--bg)',
+            surface: 'var(--surface)',
+            card: 'var(--card)',
+            border: 'var(--border-col)',
+            accent: '#6c63ff',
+            accentLight: '#a09bff',
+            gold: '#f5c842',
+            textMain: 'var(--text-main)',
+            textSub: 'var(--text-sub)',
+          },
+          fontFamily: {
+            display: ['Syne', 'sans-serif'],
+            body: ['Space Grotesk', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --bg: #f5f5fa; --surface: #ffffff; --card: #ffffff;
+      --border-col: #e2e2ee; --text-main: #0f0f1a; --text-sub: #5a5a72;
+    }
+    .dark {
+      --bg: #0a0a0f; --surface: #111118; --card: #16161f;
+      --border-col: #252535; --text-main: #e8e8f0; --text-sub: #9090a8;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text-main); font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
+    .dark body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:0; opacity:0.4; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #6c63ff; border-radius: 2px; }
+    .gradient-text { background: linear-gradient(135deg,#6c63ff 0%,#a09bff 50%,#f5c842 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .section-label { font-size:0.72rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:#6c63ff; }
+    .blob { position:absolute; border-radius:50%; filter:blur(120px); pointer-events:none; z-index:0; }
+    nav { position:fixed; top:0; left:0; right:0; z-index:1000; transition:all 0.3s; }
+    nav.scrolled { background:rgba(10,10,15,0.92); backdrop-filter:blur(20px); border-bottom:1px solid var(--border-col); }
+    .light-scrolled { background:rgba(245,245,250,0.95) !important; backdrop-filter:blur(20px); border-bottom:1px solid var(--border-col); }
+    .hero-name { font-family:'Syne',sans-serif; font-weight:800; line-height:1; }
+    .typewriter-text::after { content:'|'; animation:blink 0.7s infinite; color:#6c63ff; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    .project-card { transition:transform 0.3s, box-shadow 0.3s, border-color 0.3s; cursor:pointer; background:var(--card); border-color:var(--border-col); }
+    .project-card:hover { transform:translateY(-6px); box-shadow:0 20px 60px rgba(108,99,255,0.2); border-color:#6c63ff !important; }
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; display:flex; align-items:center; justify-content:center; padding:1rem; opacity:0; pointer-events:none; transition:opacity 0.3s; backdrop-filter:blur(8px); }
+    .modal-overlay.open { opacity:1; pointer-events:all; }
+    .modal-box { background:var(--card); border:1px solid var(--border-col); border-radius:1.25rem; max-width:680px; width:100%; max-height:90vh; overflow-y:auto; transform:scale(0.95); transition:transform 0.3s; }
+    .modal-overlay.open .modal-box { transform:scale(1); }
+    .skill-bar-fill { height:6px; border-radius:9999px; background:linear-gradient(90deg,#6c63ff,#a09bff); width:0; transition:width 1.2s cubic-bezier(0.4,0,0.2,1); }
+    .skill-bar-gold { background:linear-gradient(90deg,#f5c842,#fbbf24) !important; }
+    .form-input { background:var(--surface); border:1px solid var(--border-col); color:var(--text-main); border-radius:0.6rem; padding:0.75rem 1rem; width:100%; outline:none; transition:border-color 0.2s,box-shadow 0.2s; font-family:'Space Grotesk',sans-serif; }
+    .form-input:focus { border-color:#6c63ff; box-shadow:0 0 0 3px rgba(108,99,255,0.15); }
+    .form-input.error { border-color:#ef4444; }
+    .notification { position:fixed; top:5rem; right:1.5rem; z-index:9998; background:var(--card); border:1px solid #6c63ff; border-radius:0.75rem; padding:1rem 1.5rem; transform:translateX(120%); transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1); display:flex; align-items:center; gap:0.75rem; min-width:280px; }
+    .notification.show { transform:translateX(0); }
+    .btn-glow { position:relative; overflow:hidden; }
+    .btn-glow:hover { background:#a09bff; }
+    .skeleton { background:linear-gradient(90deg,var(--card) 25%,var(--border-col) 50%,var(--card) 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:0.5rem; }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    .filter-btn { transition:all 0.25s; cursor:pointer; border:1px solid var(--border-col); color:var(--text-sub); }
+    .filter-btn.active, .filter-btn:hover { background:#6c63ff; color:white; border-color:#6c63ff; }
+    .tech-filter-btn { transition:all 0.2s; cursor:pointer; border:1px solid var(--border-col); color:var(--text-sub); }
+    .tech-filter-btn.active { border-color:#6c63ff; color:#6c63ff; background:var(--surface); }
+    .testimonial-card { background:var(--card); border:1px solid var(--border-col); transition:transform 0.3s; }
+    .testimonial-card:hover { transform:translateY(-4px); }
+    .blog-card { background:var(--card); border:1px solid var(--border-col); transition:transform 0.3s,box-shadow 0.3s; }
+    .blog-card:hover { transform:translateY(-4px); box-shadow:0 16px 48px rgba(108,99,255,0.15); }
+    .about-card { background:var(--card); border:1px solid var(--border-col); }
+    .what-card { background:var(--card); border:1px solid var(--border-col); transition:border-color 0.2s; }
+    .what-card:hover { border-color:#6c63ff; }
+    .skill-card { background:var(--card); border:1px solid var(--border-col); }
+    .contact-info-card { background:var(--card); border:1px solid var(--border-col); transition:border-color 0.2s; }
+    .contact-info-card:hover { border-color:#6c63ff; }
+    .fade-in { animation:fadeInUp 0.6s ease forwards; }
+    @keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @media(max-width:768px) { .hero-name{font-size:clamp(2.8rem,12vw,5rem);} .desktop-nav{display:none;} }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important} }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+// ── MOCK API DATA ─────────────────────────────────────────────
+const PROFILE = {
+  name: "Zaid Mujtaba Khan",
+  bio: "Frontend developer passionate about clean, purposeful web experiences & data-driven SEO strategy. Currently building in public.",
+  location: "Hyderabad, Sindh, Pakistan",
+  email: "zaidmujtaba548@gmail.com",
+  github: "https://github.com/xam-ops",
+  whatsapp: "+92 310 622 5630",
+  stats: [
+    { label: "Years Learning", value: "3+" },
+    { label: "Projects Built", value: "10+" },
+    { label: "SAU, Tandojam", value: "BSE" },
+  ]
+};
+
+const PROJECTS = [
+  { id:1, title:"Personal Portfolio Website", desc:"A responsive personal portfolio to showcase skills, projects and contact information. Built as part of my frontend development journey using semantic HTML5, Tailwind CSS and JavaScript.", tech:["HTML5","CSS3","JavaScript","Bootstrap"], category:"web", emoji:"🌐", color:"from-purple-900/40 to-indigo-900/40", badge:"Web Dev", badgeColor:"bg-purple-500/20 text-purple-300", live:"https://github.com/xam-ops", github:"https://github.com/xam-ops", featured:true },
+  { id:2, title:"University Assignment Project", desc:"A web-based project developed as part of my Software Engineering coursework, applying core frontend concepts in a real-world context.", tech:["HTML5","Bootstrap","CSS3"], category:"web", emoji:"📚", color:"from-green-900/30 to-teal-900/30", badge:"University", badgeColor:"bg-green-500/20 text-green-400", live:"#", github:"https://github.com/xam-ops" },
+  { id:3, title:"SEO Audit & Strategy Report", desc:"A comprehensive SEO audit for a local business website, identifying technical issues, keyword opportunities, and content gaps. Delivered a full strategy report with 3-month roadmap.", tech:["Google Search Console","SEMrush","Ahrefs","Technical SEO"], category:"seo", emoji:"📊", color:"from-yellow-900/30 to-orange-900/20", badge:"SEO", badgeColor:"bg-yellow-500/20 text-yellow-400", live:"#", github:"#", featured:true },
+  { id:4, title:"Clothing Store (Auth System)", desc:"A backend clothing store application featuring full user authentication — registration, login, credential editing, and permanent account deletion.", tech:["Python","Backend","Authentication","Database"], category:"other", emoji:"🛍️", color:"from-pink-900/30 to-red-900/20", badge:"Backend", badgeColor:"bg-pink-500/20 text-pink-400", live:"#", github:"https://github.com/xam-ops" },
+  { id:5, title:"University Portal Redesign", desc:"A redesign concept for a university portal focusing on improved accessibility, cleaner navigation, and mobile-first design principles.", tech:["Figma","Tailwind CSS","Accessibility","Mobile-first"], category:"ui", emoji:"🎨", color:"from-blue-900/30 to-cyan-900/20", badge:"UI/UX", badgeColor:"bg-blue-500/20 text-blue-400", live:"#", github:"#" },
+  { id:6, title:"Portfolio V4 — API Integration", desc:"This portfolio — Week 4 upgrade with React via CDN, Fetch API simulation, dark/light mode toggle, search & filter, skeleton loaders, and reusable component architecture.", tech:["React","Tailwind CSS","Fetch API","GSAP","JavaScript"], category:"web", emoji:"🚀", color:"from-accent/20 to-yellow-900/10", badge:"This Site", badgeColor:"bg-purple-500/20 text-purple-300", live:"#", github:"https://github.com/xam-ops", featured:true },
+];
+
+const SKILLS = {
+  frontend: [
+    { name:"HTML5 / CSS3", level:85 },
+    { name:"JavaScript", level:70 },
+    { name:"Tailwind CSS", level:75 },
+    { name:"Bootstrap", level:70 },
+  ],
+  seo: [
+    { name:"On-Page SEO", level:80 },
+    { name:"Technical SEO", level:72 },
+    { name:"Keyword Research", level:78 },
+    { name:"Content Strategy", level:75 },
+  ],
+  learning: [
+    { name:"React.js", status:"In Progress", color:"text-purple-400" },
+    { name:"Next.js", status:"In Progress", color:"text-purple-400" },
+    { name:"GSAP Animations", status:"Active", color:"text-yellow-400" },
+    { name:"Git / GitHub", status:"Comfortable", color:"text-green-400" },
+    { name:"Python", status:"Learning", color:"text-blue-400" },
+  ]
+};
+
+const TESTIMONIALS = [
+  { id:1, name:"Prof. Ali Raza", role:"University Supervisor", avatar:"AR", quote:"Zaid has an incredible drive to learn. He picks up new concepts quickly and always goes beyond what's expected. A truly dedicated student." },
+  { id:2, name:"Ahmed Siddiqui", role:"Project Collaborator", avatar:"AS", quote:"Working with Zaid on group projects is always a great experience — he always thinks forward and has a solution ready." },
+  { id:3, name:"Sara Memon", role:"Peer Reviewer", avatar:"SM", quote:"Zaid's passion for programming is genuine. He spends the time practising and building things until he knows it. That commitment will take him far." },
+];
+
+const BLOGS = [
+  { id:1, emoji:"🔍", tag:"SEO", title:"SEO for Developers: Why Clean Code = Better Rankings", excerpt:"Semantic HTML, load speed, and clean URLs are ranking signals. Here's how developer practices directly impact search visibility.", content:"<p>As a developer, you already write code. But are you writing code that Google can read?</p><p style='margin-top:12px'>Semantic HTML is the foundation. Using h1–h6 in proper order, nav, main, article, and section tags — these tell search engine crawlers exactly what your content is.</p><p style='margin-top:12px'>Load speed is a ranking factor. Google's Core Web Vitals measure LCP, FID, and CLS. A site that loads in 1 second converts 3× better than one that loads in 5 seconds — and ranks higher too.</p><p style='margin-top:12px'>Clean, readable URLs matter. Avoid query strings like ?id=123 — instead use /blog/seo-for-developers. Every URL is a ranking signal.</p><p style='margin-top:12px'>As a developer who understands SEO, you're rare. That's your competitive advantage.</p>" },
+  { id:2, emoji:"🎨", tag:"CSS", title:"5 Tailwind CSS Tricks I Wish I Knew Earlier", excerpt:"From group hover to arbitrary values — tricks that changed how I build UI every single day.", content:"<p>I've been using Tailwind for over a year and these tricks changed how I write UI.</p><p style='margin-top:12px'><strong style='color:white'>1. Group hover.</strong> Use group on a parent and group-hover: on children to create hover effects that ripple through an element.</p><p style='margin-top:12px'><strong style='color:white'>2. Arbitrary values.</strong> Need a specific size? Use square brackets: w-[342px] or text-[13px].</p><p style='margin-top:12px'><strong style='color:white'>3. @apply in your CSS.</strong> When a pattern repeats 20 times, abstract it with @apply.</p><p style='margin-top:12px'><strong style='color:white'>4. Dark mode with dark:.</strong> Built-in dark mode support. Just add dark: prefix and toggle the class on root.</p><p style='margin-top:12px'><strong style='color:white'>5. Responsive stacking.</strong> Start mobile-first with flex-col then switch to md:flex-row.</p>" },
+  { id:3, emoji:"⚡", tag:"Performance", title:"Core Web Vitals Explained: What Every Dev Must Know", excerpt:"LCP, FID, and CLS — Google's official ranking signals. Here's what they mean and exactly how to improve them.", content:"<p>Google made Core Web Vitals an official ranking signal. Here's what they actually are.</p><p style='margin-top:12px'><strong style='color:white'>LCP — Largest Contentful Paint.</strong> Target: under 2.5 seconds. Fix: optimize images, use CDN, preload hero assets.</p><p style='margin-top:12px'><strong style='color:white'>FID → INP — Interaction to Next Paint.</strong> Target: under 200ms. Fix: reduce JavaScript execution time, defer non-critical scripts.</p><p style='margin-top:12px'><strong style='color:white'>CLS — Cumulative Layout Shift.</strong> Target: under 0.1. Fix: always set width and height on images.</p><p style='margin-top:12px'>Measure with Google PageSpeed Insights, Lighthouse, or Chrome DevTools. Start there, then fix your biggest offender first.</p>" },
+];
+
+// Simulated Fetch API (swap URLs with real backend when ready)
+const delay = ms => new Promise(r => setTimeout(r, ms));
+async function fetchProfile() { await delay(600); return PROFILE; }
+async function fetchProjects() { await delay(900); return PROJECTS; }
+async function fetchSkills() { await delay(750); return SKILLS; }
+async function fetchTestimonials() { await delay(700); return TESTIMONIALS; }
+async function fetchBlogs() { await delay(650); return BLOGS; }
+
+// ── SKELETON COMPONENTS ───────────────────────────────────────
+function SkeletonBox({ className }) {
+  return <div className={`skeleton ${className}`} aria-hidden="true" />;
+}
+function ProjectSkeleton() {
+  return (
+    <div className="rounded-2xl overflow-hidden border" style={{borderColor:'var(--border-col)',background:'var(--card)'}}>
+      <SkeletonBox className="h-40 w-full rounded-none" />
+      <div className="p-6 space-y-3">
+        <SkeletonBox className="h-4 w-1/3" />
+        <SkeletonBox className="h-5 w-3/4" />
+        <SkeletonBox className="h-4 w-full" />
+        <SkeletonBox className="h-4 w-5/6" />
+        <div className="flex gap-2 pt-1">
+          <SkeletonBox className="h-6 w-14 rounded-full" />
+          <SkeletonBox className="h-6 w-14 rounded-full" />
+          <SkeletonBox className="h-6 w-14 rounded-full" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── NAVBAR ────────────────────────────────────────────────────
+function Navbar({ theme, toggleTheme }) {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  useEffect(() => {
+    const h = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', h, { passive: true });
+    return () => window.removeEventListener('scroll', h);
+  }, []);
+  const links = ['About','Projects','Skills','Blog','Testimonials','Contact'];
+  return (
+    <nav id="navbar" className={scrolled ? (theme==='dark' ? 'scrolled' : 'light-scrolled') : ''} role="navigation" aria-label="Main navigation">
+      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between relative">
+        <a href="#home" className="font-display font-bold text-xl z-10" style={{color:'var(--text-main)'}} aria-label="ZMK Home">
+          <span style={{color:'#6c63ff'}}>Z</span>MK
+        </a>
+        <ul className="desktop-nav hidden md:flex items-center gap-8 text-sm font-medium" style={{color:'var(--text-sub)'}}>
+          {links.map(l => l === 'Contact' ? (
+            <li key={l}><a href="#contact" className="bg-accent text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-accentLight transition-colors">{l}</a></li>
+          ) : (
+            <li key={l}><a href={`#${l.toLowerCase()}`} className="hover:text-white transition-colors">{l}</a></li>
+          ))}
+        </ul>
+        <div className="flex items-center gap-3">
+          <button onClick={toggleTheme} aria-label={`Switch to ${theme==='dark'?'light':'dark'} mode`}
+            className="w-9 h-9 flex items-center justify-center rounded-lg transition-all"
+            style={{border:'1px solid var(--border-col)',color:'var(--text-sub)'}}>
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
+          <button className="md:hidden" onClick={() => setMenuOpen(p=>!p)} aria-label="Toggle menu" aria-expanded={menuOpen} style={{color:'var(--text-main)'}}>
+            {menuOpen ? '✕' : '☰'}
+          </button>
+        </div>
+      </div>
+      {menuOpen && (
+        <div className="md:hidden flex flex-col gap-3 px-6 py-4" style={{background:'var(--bg)',borderBottom:'1px solid var(--border-col)'}}>
+          {links.map(l => (
+            <a key={l} href={`#${l.toLowerCase()}`} style={{color:'var(--text-sub)'}} onClick={() => setMenuOpen(false)}>{l}</a>
+          ))}
+        </div>
+      )}
+    </nav>
+  );
+}
+
+// ── HERO ──────────────────────────────────────────────────────
+function Hero({ profile, loading }) {
+  const [displayed, setDisplayed] = useState('');
+  const [roleIdx, setRoleIdx] = useState(0);
+  const [typing, setTyping] = useState(true);
+  const canvasRef = useRef(null);
+  const roles = ['SEO Expert','Web Developer','Frontend Dev','BSE Student @ SAU'];
+
+  useEffect(() => {
+    const target = roles[roleIdx];
+    let i = displayed.length;
+    if (typing) {
+      if (i < target.length) { const t = setTimeout(() => setDisplayed(target.slice(0,i+1)), 80); return () => clearTimeout(t); }
+      else { const t = setTimeout(() => setTyping(false), 1500); return () => clearTimeout(t); }
+    } else {
+      if (i > 0) { const t = setTimeout(() => setDisplayed(target.slice(0,i-1)), 40); return () => clearTimeout(t); }
+      else { setRoleIdx(r => (r+1)%roles.length); setTyping(true); }
+    }
+  }, [displayed, typing, roleIdx]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current; if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W, H, particles = [], raf;
+    const resize = () => { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; };
+    resize();
+    window.addEventListener('resize', resize, { passive:true });
+    for (let i = 0; i < 40; i++) particles.push({ x:Math.random()*1000, y:Math.random()*600, r:Math.random()*1.5+0.5, vx:(Math.random()-0.5)*0.3, vy:(Math.random()-0.5)*0.3, a:Math.random() });
+    const draw = () => {
+      ctx.clearRect(0,0,W,H);
+      particles.forEach(p => {
+        p.x+=p.vx; p.y+=p.vy; p.a+=0.01;
+        if(p.x<0)p.x=W; if(p.x>W)p.x=0; if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=`rgba(108,99,255,${0.3+Math.sin(p.a)*0.3})`; ctx.fill();
+      });
+      raf = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize); };
+  }, []);
+
+  return (
+    <section id="home" className="relative min-h-screen flex items-center overflow-hidden pt-20" aria-label="Hero section">
+      <div className="blob w-96 h-96 opacity-10 top-10 -left-20" style={{background:'#6c63ff'}} />
+      <div className="blob w-72 h-72 opacity-10 bottom-20 right-10" style={{background:'#f5c842'}} />
+      <canvas ref={canvasRef} aria-hidden="true" style={{position:'absolute',inset:0,width:'100%',height:'100%',pointerEvents:'none',zIndex:0,opacity:0.4}} />
+      <div className="relative z-10 max-w-6xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center w-full">
+        <div className="fade-in">
+          {loading ? (
+            <div className="space-y-4">
+              <SkeletonBox className="h-4 w-48" />
+              <SkeletonBox className="h-16 w-full" />
+              <SkeletonBox className="h-5 w-64" />
+              <SkeletonBox className="h-4 w-full" />
+              <div className="flex gap-3 pt-2"><SkeletonBox className="h-10 w-28 rounded-xl" /><SkeletonBox className="h-10 w-28 rounded-xl" /></div>
+            </div>
+          ) : profile ? (
+            <>
+              <p className="section-label mb-4">// CS Student · Hyderabad, Sindh</p>
+              <h1 className="hero-name text-6xl md:text-7xl mb-4" style={{color:'var(--text-main)'}}>
+                Zaid<br/>Mujtaba<br/><span className="gradient-text">Khan</span>
+              </h1>
+              <p className="text-lg mt-2" style={{color:'var(--text-sub)'}}>
+                <span className="typewriter-text font-medium" style={{color:'#a09bff'}}>{displayed}</span>
+              </p>
+              <p className="mt-3 max-w-md text-sm leading-relaxed" style={{color:'var(--text-sub)'}}>{profile.bio}</p>
+              <div className="flex flex-wrap gap-4 mt-8">
+                <a href="#projects" className="btn-glow bg-accent text-white px-7 py-3 rounded-xl font-semibold text-sm transition-all">View My Work</a>
+                <a href="#contact" className="px-7 py-3 rounded-xl font-semibold text-sm transition-all" style={{border:'1px solid var(--border-col)',color:'var(--text-main)'}}>Get in Touch</a>
+              </div>
+              <div className="flex gap-10 mt-12">
+                {profile.stats.map(s => (
+                  <div key={s.label}>
+                    <p className="text-3xl font-bold font-display" style={{color:'var(--text-main)'}}>{s.value === 'BSE' ? <span className="gradient-text">{s.value}</span> : s.value}</p>
+                    <p className="text-xs mt-1" style={{color:'var(--text-sub)'}}>{s.label}</p>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : null}
+        </div>
+        <div className="flex justify-center fade-in">
+          <div className="relative">
+            <div className="w-64 h-64 rounded-3xl flex items-center justify-center text-8xl shadow-2xl" style={{background:'linear-gradient(135deg,rgba(108,99,255,0.2),rgba(245,200,66,0.1))',border:'1px solid var(--border-col)'}}>
+              👨‍💻
+              <span className="absolute top-3 right-3 w-3 h-3 rounded-full bg-green-500 animate-pulse" title="Available for work" />
+            </div>
+            <div className="absolute -top-4 -right-6 rounded-xl px-3 py-2 text-xs font-semibold shadow-lg" style={{background:'var(--card)',border:'1px solid var(--border-col)',color:'#a09bff'}}>🔍 SEO Expert</div>
+            <div className="absolute -bottom-4 -left-6 rounded-xl px-3 py-2 text-xs font-semibold shadow-lg" style={{background:'var(--card)',border:'1px solid var(--border-col)',color:'#f5c842'}}>&lt;/&gt; Web Dev</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── ABOUT ─────────────────────────────────────────────────────
+function About({ profile, loading }) {
+  return (
+    <section id="about" className="py-28 relative" aria-label="About section">
+      <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+        <div className="about-card rounded-2xl p-8 relative overflow-hidden">
+          <div className="blob w-48 h-48 opacity-10 -top-10 -right-10" style={{background:'#6c63ff'}} />
+          <p className="section-label mb-3">// About Me</p>
+          <h2 className="text-3xl font-display font-bold mb-6" style={{color:'var(--text-main)'}}>Learning, building,<br/><span className="gradient-text">growing every day</span></h2>
+          {loading ? <div className="space-y-3">{[1,2,3].map(i=><SkeletonBox key={i} className="h-4 w-full" />)}</div> : (
+            <>
+              <p className="text-sm leading-relaxed mb-4" style={{color:'var(--text-sub)'}}>Hey! I'm <strong style={{color:'var(--text-main)'}}>Zaid Mujtaba Khan</strong>, a Software Engineering student at <strong style={{color:'#a09bff'}}>Sindh Agriculture University Tandojam</strong>, based in Hyderabad, Sindh.</p>
+              <p className="text-sm leading-relaxed mb-4" style={{color:'var(--text-sub)'}}>I blend frontend development with SEO strategy — I don't just build websites, I build websites that <em style={{color:'var(--text-main)'}}>rank</em>.</p>
+              <p className="text-sm leading-relaxed" style={{color:'var(--text-sub)'}}>My goal: become the developer everyone turns to first. One project, one commit, one ranking at a time.</p>
+              <div className="flex gap-4 mt-8">
+                <a href="https://github.com/xam-ops" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs px-4 py-2 rounded-lg transition-colors" style={{color:'var(--text-sub)',border:'1px solid var(--border-col)'}}>⚡ GitHub</a>
+                <a href="https://linkedin.com/in/zaid-mujtaba-khan" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs px-4 py-2 rounded-lg transition-colors" style={{color:'var(--text-sub)',border:'1px solid var(--border-col)'}}>💼 LinkedIn</a>
+              </div>
+            </>
+          )}
+        </div>
+        <div>
+          <p className="section-label mb-6">// What I Do</p>
+          <div className="space-y-4">
+            {[{icon:'🌐',title:'Web Development',desc:'Building clean, responsive interfaces using HTML5, CSS3, JavaScript, and Tailwind CSS.'},
+              {icon:'🔍',title:'SEO Strategy',desc:'Optimizing content and site architecture to drive organic traffic and improve search rankings.'},
+              {icon:'📊',title:'Performance Optimization',desc:'Improving Core Web Vitals, load speed, and accessibility for better user experience and rankings.'}
+            ].map(w => (
+              <div key={w.title} className="what-card rounded-xl p-5">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-2xl">{w.icon}</span>
+                  <h3 className="font-semibold" style={{color:'var(--text-main)'}}>{w.title}</h3>
+                </div>
+                <p className="text-sm" style={{color:'var(--text-sub)'}}>{w.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── PROJECT CARD ──────────────────────────────────────────────
+function ProjectCard({ project, onClick }) {
+  return (
+    <article className="project-card rounded-2xl overflow-hidden border" onClick={() => onClick(project)} tabIndex={0} role="button" aria-label={`View ${project.title}`} onKeyDown={e => e.key==='Enter' && onClick(project)}>
+      <div className={`h-40 bg-gradient-to-br ${project.color} flex items-center justify-center text-5xl relative`}>
+        {project.emoji}
+        {project.featured && <span className="absolute top-3 left-3 text-xs font-semibold px-2 py-0.5 rounded-full bg-white/20 text-white">⭐ Featured</span>}
+        <span className={`absolute top-3 right-3 text-xs font-semibold px-2 py-1 rounded-full ${project.badgeColor}`}>{project.badge}</span>
+      </div>
+      <div className="p-6">
+        <h3 className="font-semibold text-lg mb-2" style={{color:'var(--text-main)'}}>{project.title}</h3>
+        <p className="text-sm leading-relaxed mb-4 line-clamp-2" style={{color:'var(--text-sub)'}}>{project.desc}</p>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {project.tech.map(t => <span key={t} className="text-xs px-2 py-1 rounded" style={{background:'var(--surface)',border:'1px solid var(--border-col)',color:'var(--text-sub)'}}>{t}</span>)}
+        </div>
+        <button className="text-sm font-medium transition-colors" style={{color:'#6c63ff'}}>View Details →</button>
+      </div>
+    </article>
+  );
+}
+
+// ── PROJECTS ──────────────────────────────────────────────────
+function Projects({ projects, loading, error }) {
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [activeTech, setActiveTech] = useState('');
+  const [search, setSearch] = useState('');
+  const [modal, setModal] = useState(null);
+
+  const allTechs = [...new Set(projects.flatMap(p => p.tech))].sort();
+  const filtered = projects.filter(p => {
+    const matchCat = activeCategory === 'all' || p.category === activeCategory;
+    const matchTech = !activeTech || p.tech.includes(activeTech);
+    const matchSearch = !search || p.title.toLowerCase().includes(search.toLowerCase()) || p.desc.toLowerCase().includes(search.toLowerCase()) || p.tech.some(t => t.toLowerCase().includes(search.toLowerCase()));
+    return matchCat && matchTech && matchSearch;
+  });
+
+  const cats = [{key:'all',label:'All'},{key:'web',label:'Web Dev'},{key:'seo',label:'SEO'},{key:'ui',label:'UI/UX'},{key:'other',label:'Other'}];
+
+  return (
+    <section id="projects" className="py-28 relative" aria-label="Projects section">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="text-center mb-14">
+          <p className="section-label mb-3">// University Work</p>
+          <h2 className="text-4xl font-display font-bold" style={{color:'var(--text-main)'}}>Projects</h2>
+        </div>
+
+        {/* Search */}
+        <div className="max-w-md mx-auto mb-6">
+          <input type="search" placeholder="Search projects or technologies…" value={search} onChange={e=>setSearch(e.target.value)} className="form-input text-sm" aria-label="Search projects" />
+        </div>
+
+        {/* Category filter */}
+        <div className="flex flex-wrap justify-center gap-2 mb-4">
+          {cats.map(c => (
+            <button key={c.key} onClick={()=>setActiveCategory(c.key)} className={`filter-btn text-sm px-5 py-2 rounded-full font-medium ${activeCategory===c.key?'active':''}`} aria-pressed={activeCategory===c.key}>{c.label}</button>
+          ))}
+        </div>
+
+        {/* Tech filter */}
+        <div className="flex flex-wrap justify-center gap-2 mb-10">
+          <button onClick={()=>setActiveTech('')} className={`tech-filter-btn text-xs px-3 py-1 rounded-full ${!activeTech?'active':''}`}>All Tech</button>
+          {allTechs.map(t => (
+            <button key={t} onClick={()=>setActiveTech(activeTech===t?'':t)} className={`tech-filter-btn text-xs px-3 py-1 rounded-full ${activeTech===t?'active':''}`}>{t}</button>
+          ))}
+        </div>
+
+        {error && <div className="text-center py-12 text-red-400"><p className="text-4xl mb-3">⚠️</p><p>Failed to load projects</p></div>}
+
+        {loading && !error && (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1,2,3,4,5,6].map(i => <ProjectSkeleton key={i} />)}
+          </div>
+        )}
+
+        {!loading && !error && filtered.length === 0 && (
+          <div className="text-center py-16" style={{color:'var(--text-sub)'}}>
+            <p className="text-5xl mb-4">🔍</p>
+            <p className="font-semibold text-lg" style={{color:'var(--text-main)'}}>No projects found</p>
+            <p className="text-sm mt-1">Try a different search or filter.</p>
+            <button className="mt-4 text-sm" style={{color:'#6c63ff'}} onClick={()=>{setSearch('');setActiveCategory('all');setActiveTech('');}}>Clear all filters</button>
+          </div>
+        )}
+
+        {!loading && !error && filtered.length > 0 && (
+          <>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filtered.map(p => <ProjectCard key={p.id} project={p} onClick={setModal} />)}
+            </div>
+            <p className="text-center mt-8 text-sm" style={{color:'var(--text-sub)'}}>
+              More projects coming soon — currently building in public on <a href="https://github.com/xam-ops" target="_blank" rel="noopener noreferrer" style={{color:'#6c63ff'}}>GitHub</a>.
+            </p>
+          </>
+        )}
+      </div>
+
+      {/* Project Modal */}
+      {modal && (
+        <div className="modal-overlay open" onClick={e=>e.target===e.currentTarget&&setModal(null)} role="dialog" aria-modal="true">
+          <div className="modal-box p-8">
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <p className="section-label mb-1">// Project Details</p>
+                <h2 className="text-2xl font-display font-bold" style={{color:'var(--text-main)'}}>{modal.title}</h2>
+              </div>
+              <button onClick={()=>setModal(null)} className="ml-4 mt-1 p-1 rounded" style={{color:'var(--text-sub)'}} aria-label="Close">✕</button>
+            </div>
+            <div className="flex gap-4 mb-6">
+              {[modal.emoji,'💻','📱'].map((e,i) => (
+                <div key={i} className="flex-1 h-24 rounded-xl flex items-center justify-center text-3xl" style={{background:'var(--surface)',border:'1px solid var(--border-col)'}}>{e}</div>
+              ))}
+            </div>
+            <p className="text-sm leading-relaxed mb-6" style={{color:'var(--text-sub)'}}>{modal.desc}</p>
+            <div className="mb-6">
+              <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{color:'var(--text-sub)'}}>Technologies Used</p>
+              <div className="flex flex-wrap gap-2">
+                {modal.tech.map(t => <span key={t} className="text-xs px-3 py-1.5 rounded-full font-medium" style={{background:'rgba(108,99,255,0.2)',color:'#a09bff'}}>{t}</span>)}
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <a href={modal.live} target="_blank" rel="noopener noreferrer" className="bg-accent text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-accentLight transition-colors">Live Demo</a>
+              <a href={modal.github} target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors" style={{border:'1px solid var(--border-col)',color:'var(--text-main)'}}>GitHub</a>
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
+// ── SKILL BAR ─────────────────────────────────────────────────
+function SkillBar({ name, level, gold }) {
+  const [filled, setFilled] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => { if(e.isIntersecting){setFilled(true);obs.disconnect();} }, {threshold:0.4});
+    if(ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className="space-y-1">
+      <div className="flex justify-between text-xs">
+        <span style={{color:'var(--text-sub)'}}>{name}</span>
+        <span className="font-medium" style={{color:gold?'#f5c842':'#a09bff'}}>{level}%</span>
+      </div>
+      <div className="h-1.5 rounded-full" style={{background:'var(--border-col)'}}>
+        <div className={`skill-bar-fill ${gold?'skill-bar-gold':''}`} style={{width:filled?`${level}%`:'0'}} role="progressbar" aria-valuenow={level} aria-valuemin={0} aria-valuemax={100} />
+      </div>
+    </div>
+  );
+}
+
+// ── SKILLS ────────────────────────────────────────────────────
+function Skills({ skills, loading }) {
+  return (
+    <section id="skills" className="py-28" style={{background:'var(--surface)'}} aria-label="Skills section">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="text-center mb-14">
+          <p className="section-label mb-3">// What I Work With</p>
+          <h2 className="text-4xl font-display font-bold" style={{color:'var(--text-main)'}}>Skills &amp; Tools</h2>
+        </div>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="skill-card rounded-2xl p-7">
+            <div className="flex items-center gap-3 mb-6"><span>🌐</span><h3 className="font-semibold" style={{color:'var(--text-main)'}}>Web Frontend</h3></div>
+            {loading ? <div className="space-y-4">{[1,2,3,4].map(i=><div key={i} className="space-y-1"><SkeletonBox className="h-4 w-full" /><SkeletonBox className="h-1.5 w-full rounded-full" /></div>)}</div>
+              : <div className="space-y-5">{skills.frontend.map(s=><SkillBar key={s.name} {...s} />)}</div>}
+          </div>
+          <div className="skill-card rounded-2xl p-7">
+            <div className="flex items-center gap-3 mb-6"><span>🔍</span><h3 className="font-semibold" style={{color:'var(--text-main)'}}>SEO &amp; Marketing</h3></div>
+            {loading ? <div className="space-y-4">{[1,2,3,4].map(i=><div key={i} className="space-y-1"><SkeletonBox className="h-4 w-full" /><SkeletonBox className="h-1.5 w-full rounded-full" /></div>)}</div>
+              : <div className="space-y-5">{skills.seo.map(s=><SkillBar key={s.name} {...s} gold />)}</div>}
+          </div>
+          <div className="skill-card rounded-2xl p-7">
+            <div className="flex items-center gap-3 mb-6"><span>🚀</span><h3 className="font-semibold" style={{color:'var(--text-main)'}}>Currently Learning</h3></div>
+            {loading ? <div className="space-y-3">{[1,2,3,4,5].map(i=><SkeletonBox key={i} className="h-6 w-full" />)}</div>
+              : <div className="space-y-4">{skills.learning.map(s=>(
+                  <div key={s.name} className="flex items-center gap-3 text-sm">
+                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{background:'#6c63ff'}} />
+                    <span style={{color:'var(--text-sub)'}}>{s.name}</span>
+                    <span className={`ml-auto text-xs ${s.color}`}>{s.status}</span>
+                  </div>
+                ))}
+              </div>}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── BLOG ──────────────────────────────────────────────────────
+function Blog({ blogs, loading }) {
+  const [modal, setModal] = useState(null);
+  return (
+    <section id="blog" className="py-28" aria-label="Blog section">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="text-center mb-14">
+          <p className="section-label mb-3">// Comments &amp; Sharing</p>
+          <h2 className="text-4xl font-display font-bold" style={{color:'var(--text-main)'}}>Blog &amp; Articles</h2>
+        </div>
+        <div className="grid md:grid-cols-3 gap-6">
+          {loading ? [1,2,3].map(i=><div key={i} className="skeleton h-64 rounded-2xl" />) :
+            blogs.map(b => (
+              <article key={b.id} className="blog-card rounded-2xl overflow-hidden">
+                <div className="h-32 flex items-center justify-center text-5xl" style={{background:'linear-gradient(135deg,rgba(108,99,255,0.15),rgba(245,200,66,0.1))'}}>{b.emoji}</div>
+                <div className="p-6">
+                  <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{background:'rgba(108,99,255,0.2)',color:'#a09bff'}}>{b.tag}</span>
+                  <h3 className="font-semibold mt-3 mb-2 leading-snug" style={{color:'var(--text-main)'}}>{b.title}</h3>
+                  <p className="text-sm leading-relaxed mb-4" style={{color:'var(--text-sub)'}}>{b.excerpt}</p>
+                  <button onClick={()=>setModal(b)} className="text-sm font-medium transition-colors" style={{color:'#6c63ff'}}>Read More →</button>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+      {modal && (
+        <div className="modal-overlay open" onClick={e=>e.target===e.currentTarget&&setModal(null)} role="dialog" aria-modal="true">
+          <div className="modal-box p-8">
+            <div className="flex items-start justify-between mb-6">
+              <h2 className="text-xl font-display font-bold pr-4" style={{color:'var(--text-main)'}}>{modal.title}</h2>
+              <button onClick={()=>setModal(null)} style={{color:'var(--text-sub)'}} aria-label="Close">✕</button>
+            </div>
+            <div className="text-sm leading-relaxed space-y-3" style={{color:'var(--text-sub)'}} dangerouslySetInnerHTML={{__html:modal.content}} />
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
+// ── TESTIMONIALS ──────────────────────────────────────────────
+function Testimonials({ testimonials, loading }) {
+  return (
+    <section id="testimonials" className="py-28" style={{background:'var(--surface)'}} aria-label="Testimonials">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="text-center mb-14">
+          <p className="section-label mb-3">// Comments &amp; Feedback</p>
+          <h2 className="text-4xl font-display font-bold" style={{color:'var(--text-main)'}}>What people say</h2>
+        </div>
+        <div className="grid md:grid-cols-3 gap-6">
+          {loading ? [1,2,3].map(i=><div key={i} className="skeleton h-48 rounded-2xl" />) :
+            testimonials.map(t => (
+              <article key={t.id} className="testimonial-card rounded-2xl p-6 flex flex-col gap-4">
+                <p className="text-sm leading-relaxed italic flex-1" style={{color:'var(--text-sub)'}}>&ldquo;{t.quote}&rdquo;</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" style={{background:'rgba(108,99,255,0.2)',color:'#6c63ff'}}>{t.avatar}</div>
+                  <div>
+                    <p className="font-semibold text-sm" style={{color:'var(--text-main)'}}>{t.name}</p>
+                    <p className="text-xs" style={{color:'var(--text-sub)'}}>{t.role}</p>
+                  </div>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── CONTACT ───────────────────────────────────────────────────
+function Contact({ profile }) {
+  const [form, setForm] = useState({firstName:'',lastName:'',email:'',subject:'',message:''});
+  const [errors, setErrors] = useState({});
+  const [sending, setSending] = useState(false);
+  const [notif, setNotif] = useState({show:false,icon:'',title:'',msg:'',success:true});
+
+  const update = f => e => { setForm(p=>({...p,[f]:e.target.value})); if(errors[f]) setErrors(p=>({...p,[f]:null})); };
+  const valid = () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
+  const submit = async e => {
+    e.preventDefault();
+    const errs = {};
+    if(!form.firstName.trim()) errs.firstName='Required';
+    if(!form.lastName.trim()) errs.lastName='Required';
+    if(!valid()) errs.email='Enter a valid email';
+    if(!form.message.trim()) errs.message='Required';
+    if(Object.keys(errs).length) { setErrors(errs); return; }
+    setSending(true);
+    await delay(1400); // Simulated Fetch API call
+    setSending(false);
+    setForm({firstName:'',lastName:'',email:'',subject:'',message:''});
+    setNotif({show:true,icon:'✅',title:'Message sent!',msg:`I'll get back to you soon, ${form.firstName}!`,success:true});
+    setTimeout(()=>setNotif(p=>({...p,show:false})),4000);
+  };
+
+  return (
+    <section id="contact" className="py-28 relative" aria-label="Contact section">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="text-center mb-14">
+          <p className="section-label mb-3">// Get In Touch</p>
+          <h2 className="text-4xl font-display font-bold" style={{color:'var(--text-main)'}}>Let's connect<br/><span className="gradient-text">&amp; collaborate</span></h2>
+        </div>
+        <div className="grid md:grid-cols-2 gap-12">
+          <form onSubmit={submit} noValidate aria-label="Contact form" className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <input type="text" placeholder="First Name" value={form.firstName} onChange={update('firstName')} className={`form-input ${errors.firstName?'error':''}`} aria-label="First name" />
+                {errors.firstName && <p className="text-xs text-red-400 mt-1">{errors.firstName}</p>}
+              </div>
+              <div>
+                <input type="text" placeholder="Last Name" value={form.lastName} onChange={update('lastName')} className={`form-input ${errors.lastName?'error':''}`} aria-label="Last name" />
+                {errors.lastName && <p className="text-xs text-red-400 mt-1">{errors.lastName}</p>}
+              </div>
+            </div>
+            <div>
+              <input type="email" placeholder="Email Address" value={form.email} onChange={update('email')} className={`form-input ${errors.email?'error':''}`} aria-label="Email" />
+              {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email}</p>}
+            </div>
+            <input type="text" placeholder="Subject (optional)" value={form.subject} onChange={update('subject')} className="form-input" aria-label="Subject" />
+            <div>
+              <textarea rows={5} placeholder="Tell me what you have in mind..." value={form.message} onChange={update('message')} className={`form-input resize-none ${errors.message?'error':''}`} aria-label="Message" />
+              {errors.message && <p className="text-xs text-red-400 mt-1">{errors.message}</p>}
+            </div>
+            <button type="submit" disabled={sending} className="btn-glow bg-accent text-white w-full py-3.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-50">
+              {sending ? 'Sending... ⏳' : 'Send Message ✉️'}
+            </button>
+          </form>
+          <div className="space-y-4">
+            {profile && [
+              {icon:'📧',label:'Email',val:profile.email,href:`mailto:${profile.email}`},
+              {icon:'📍',label:'Location',val:profile.location,href:null},
+              {icon:'⚡',label:'GitHub',val:'github.com/xam-ops',href:profile.github},
+              {icon:'💬',label:'WhatsApp',val:profile.whatsapp,href:`https://wa.me/923106225630`},
+            ].map(c => (
+              <div key={c.label} tag={c.href?'a':'div'} className="contact-info-card rounded-xl p-5 flex items-center gap-4">
+                <span className="text-2xl">{c.icon}</span>
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{color:'var(--text-sub)'}}>{c.label}</p>
+                  {c.href
+                    ? <a href={c.href} target={c.href.startsWith('http')?'_blank':undefined} rel="noopener noreferrer" className="text-sm font-medium transition-colors hover:text-accent" style={{color:'var(--text-main)'}}>{c.val}</a>
+                    : <p className="text-sm font-medium" style={{color:'var(--text-main)'}}>{c.val}</p>}
+                </div>
+              </div>
+            ))}
+            <div className="contact-info-card rounded-xl p-5">
+              <p className="text-xs font-medium uppercase tracking-wider mb-2" style={{color:'var(--text-sub)'}}>Availability</p>
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <p className="text-sm font-medium" style={{color:'var(--text-main)'}}>Open to freelance &amp; collaborations</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className={`notification ${notif.show?'show':''}`} role="status" aria-live="polite">
+        <span>{notif.icon}</span>
+        <div>
+          <p className="font-semibold text-sm" style={{color:'var(--text-main)'}}>{notif.title}</p>
+          <p className="text-xs mt-0.5" style={{color:'var(--text-sub)'}}>{notif.msg}</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── FOOTER ────────────────────────────────────────────────────
+function Footer() {
+  return (
+    <footer className="py-8" style={{borderTop:'1px solid var(--border-col)'}} role="contentinfo">
+      <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm" style={{color:'var(--text-sub)'}}>
+        <p>© 2025 <span style={{color:'#6c63ff',fontWeight:600}}>Zaid Mujtaba Khan</span>. All rights reserved.</p>
+        <p className="text-xs">Built with React · Tailwind CSS · Fetch API</p>
+        <a href="#home" className="hover:text-accent transition-colors">Back to top ↑</a>
+      </div>
+    </footer>
+  );
+}
+
+// ── APP (Root) ────────────────────────────────────────────────
+function App() {
+  const [theme, setTheme] = useState('dark');
+  const [profile, setProfile] = useState(null);
+  const [projects, setProjects] = useState([]);
+  const [skills, setSkills] = useState({frontend:[],seo:[],learning:[]});
+  const [testimonials, setTestimonials] = useState([]);
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState({profile:true,projects:true,skills:true,testimonials:true,blogs:true});
+
+  const toggleTheme = () => {
+    setTheme(t => {
+      const next = t === 'dark' ? 'light' : 'dark';
+      document.documentElement.classList.toggle('dark', next === 'dark');
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    // All API calls in parallel — swap with real fetch() when backend is ready
+    fetchProfile().then(d => { setProfile(d); setLoading(l=>({...l,profile:false})); });
+    fetchProjects().then(d => { setProjects(d); setLoading(l=>({...l,projects:false})); });
+    fetchSkills().then(d => { setSkills(d); setLoading(l=>({...l,skills:false})); });
+    fetchTestimonials().then(d => { setTestimonials(d); setLoading(l=>({...l,testimonials:false})); });
+    fetchBlogs().then(d => { setBlogs(d); setLoading(l=>({...l,blogs:false})); });
+  }, []);
+
+  return (
+    <>
+      <Navbar theme={theme} toggleTheme={toggleTheme} />
+      <main>
+        <Hero profile={profile} loading={loading.profile} />
+        <About profile={profile} loading={loading.profile} />
+        <Projects projects={projects} loading={loading.projects} error={null} />
+        <Skills skills={skills} loading={loading.skills} />
+        <Blog blogs={blogs} loading={loading.blogs} />
+        <Testimonials testimonials={testimonials} loading={loading.testimonials} />
+        <Contact profile={profile} />
+      </main>
+      <Footer />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
